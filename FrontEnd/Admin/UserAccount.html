@@ -1,0 +1,95 @@
+{% extends "Admin/adminFrame.html" %}
+
+{% block style %}
+
+.para {
+    margin-top: 12%; 
+    color: black;
+    text-align: center;
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: bold;
+    font-size: 40px;
+}
+
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    padding: 3%;
+}
+
+.box {
+    flex: 0 0 15%;
+    background-color: rgba(222, 220, 255, 0.3);
+    padding: 40px;
+    margin: 20px;
+    flex-direction: box;
+    align-items: center;
+    text-align: center;
+    border-radius: 10px; 
+    border: none; 
+    margin-top: 0;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.box img {
+    max-width: 60%;
+    height: auto;
+    margin-bottom: 10px;
+    margin-top:10px
+}
+
+.box h4 {
+    margin: 0;
+    margin-top: 10px;
+    margin-bottom: 8px;
+    font-size: 18px;
+}
+
+button[class="box"]:hover {
+    border: 2px solid rgba(67, 59, 255, 0.3);
+}
+
+{% endblock style %}
+
+{% block content %}
+
+<div class="para">
+    <p>User Account</p>
+</div>
+
+<div class="container">
+    <button class="box" onclick="location.href='/'">
+        <img src="{{ url_for('static', filename='accCreate.png')}}" alt="Image">
+        <h4>Create</h4>
+        <h4>User Account</h4>
+    </button>
+
+    <button class="box" onclick="location.href='/'">
+        <img src="{{ url_for('static', filename='accView.png')}}" alt="Image">
+        <h4>View</h4>
+        <h4>User Account</h4>
+    </button>
+
+    <button class="box" onclick="window.location.href='/'">
+        <img src="{{ url_for('static', filename='accUpdate.png')}}" alt="Image">
+        <h4>Update</h4>
+        <h4>User Account</h4>
+    </button>
+
+    <button class="box" onclick="window.location.href='/'">
+        <img src="{{ url_for('static', filename='accDelete.png')}}" alt="Image">
+        <h4>Delete</h4>
+        <h4>User Account</h4>
+    </button>
+
+    <button class="box" onclick="window.location.href='/'">
+        <img src="{{ url_for('static', filename='accSearch.png')}}" alt="Image">
+        <h4>Search</h4>
+        <h4>User Account</h4>
+    </button>
+
+</div>
+
+{% endblock content %}
