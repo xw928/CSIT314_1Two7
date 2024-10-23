@@ -4,16 +4,17 @@ from flask import Blueprint, render_template, request, jsonify
 admin_blueprint = Blueprint('admin_blueprint', __name__)
 
 @admin_blueprint.route('/admin_home')
-def UserAccount():
+def admin_dashboard():
     return render_template('Admin/adminDashboard.html')
 
 @admin_blueprint.route('/user_acc')
-def UserAccount():
-    return render_template('Admin/UserAccount.html')
+def user_account():
+    return render_template("Admin/UserAccount.html")
 
 @admin_blueprint.route('/user_pf')
-def UserProfile():
+def user_profile():
     return render_template('Admin/UserProfile.html')
+
 # @user_admin_blueprint.route("/")
 # def login_page():
 #     return render_template("login.html")
