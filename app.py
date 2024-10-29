@@ -3,9 +3,6 @@ from datetime import timedelta
 
 app = Flask(__name__, template_folder="FrontEnd")
 
-# from boundary.user_admin import user_admin_blueprint
-# app.register_blueprint(user_admin_blueprint)
-
 app.secret_key = "123"
 app.permanent_session_lifetime = timedelta(hours=1)
 
@@ -15,8 +12,15 @@ app.register_blueprint(user_view_blueprint)
 from boundary.admin_view import admin_blueprint
 app.register_blueprint(admin_blueprint)
 
-# from boundary.used_car_agent import used_car_agent_blueprint
-# app.register_blueprint(used_car_agent_blueprint)
+from boundary.agent_view import agent_blueprint
+app.register_blueprint(agent_blueprint)
+
+from boundary.buyer_view import buyer_blueprint
+app.register_blueprint(buyer_blueprint)
+
+from boundary.seller_view import seller_blueprint
+app.register_blueprint(seller_blueprint)
+
 
 if __name__ == '__main__':
     app.run(debug=True)

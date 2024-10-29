@@ -1,0 +1,185 @@
+{% extends "Admin/adminFrame.html" %}
+
+{% block style %}
+.para {
+    margin-top:7%; 
+    color: black;
+    text-align: center;
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: bold;
+    font-size: 40px;
+    margin-bottom: 60px;
+}
+
+.container {
+    max-width: 500px;
+    margin: 40px auto;
+    padding: 0 20px;
+}
+
+.custom-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0; 
+    border-radius: 5px; 
+    box-shadow: 0 5px 10px rgba(192, 192, 192, 0.5); 
+}
+
+.custom-table th,
+.custom-table td {
+    padding: 0.75rem;
+    width: 50%;
+}
+
+thead {
+    background-color: rgba(222, 220, 255, 0.4);
+}
+
+th {
+    text-align: left;
+    font-weight: 600;
+    color: #4a5568;
+}
+
+td {
+    border-bottom: 1.5px solid rgba(192, 192, 192, 0.2); 
+    color: #2d3748;
+}
+
+.status-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.25rem 0.75rem;
+    border-radius: 9999px;
+    font-size: 0.925rem;
+    font-weight: 500;
+}
+
+.status-active {
+    background-color: #DEF7EC;
+    color: #03543F;
+}
+
+.status-inactive {
+    background-color: #FDE8E8;
+    color: #9B1C1C;
+}
+
+form {
+    width: 100%;
+}
+
+form div {
+    width: 100%;
+    margin-bottom: 25px;
+}
+
+.button {
+    width: 100%;
+    padding: 12px;
+    background: #000;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.button:hover {
+    background: #333;
+}
+
+.button.disabled {
+    background-color: #ccc;
+    color: #666;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+.message-success{
+    display: inline-flex;
+    align-items: center;
+    padding: 0.75rem 1.25rem;
+    border-radius: 9999px;
+    font-size: 1rem;
+    font-weight: 500;
+    text-align: center;
+    background-color: #DEF7EC;
+    color: #03543F;
+}
+
+.right-column {
+    margin-top:30px;
+    text-align: right;
+}
+
+.right-column a {
+    color: #000;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.right-column a:hover {
+    text-decoration: underline;
+}
+
+{% endblock style %}
+
+{% block content %}
+
+<div class="para">
+    <p>Suspend User Account</p>
+</div>
+
+<div class="container">
+    <form action="{{ url_for('admin_blueprint.displaySuspendUserAccount') }}" method="POST">
+        <div>
+            {% set status = { 1: 'Active', 0: 'Inactive' } %}
+            <table class="custom-table">
+                <thead>
+                    <tr>
+                        <th colspan="2" style="text-align: center;">User Account Details</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>User ID:</strong></td>
+                        <td>{{ user_info.user_id }}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Username:</strong></td>
+                        <td>{{ user_info.username }}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Role:</strong></td>
+                        <td>{{ user_info.role|title }}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Account Status:</strong></td>
+                        <td>
+                            <span class="status-badge {% if user_info.acc_status == 1 %}status-active{% else %}status-inactive{% endif %}">
+                                {{ 'Active' if user_info.acc_status == 1 else 'Inactive' }}
+                            </span>
+                        </td>
+                    </tr>
+
+                </tbody>
+            </table>
+        </div>
+        
+        <br>
+        <p>Are you sure want to suspend this account?</p>
+        <br>
+
+        <button class="button {% if user_info.acc_status == 0 %}disabled{% endif %}" type="submit">Yes, Suspend User Account</button>
+
+        <p class="right-column"> Back to <a onclick="window.location.href='/search_ua'">Search Page</a><p>
+        
+        {% if message %}
+            <p class="message-success">{{ message }}</p>
+        {% endif %}
+    </form>
+</div>
+
+{% endblock content %}
