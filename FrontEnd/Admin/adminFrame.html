@@ -3,10 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}"> -->
-    <title>1Two7</title>
+    <title>1Two7 Used Car</title>
     <style>
-        /* Navbar Styles */
+
         .navbar {
             position: fixed;
             top: 0;
@@ -22,7 +21,6 @@
             margin: 0 auto;
         }
 
-        /* Left side: 1Two7 logo */
         .navbar .logo {
             font-size: 30px;
             font-weight: bold;
@@ -38,7 +36,7 @@
         }
 
         nav {
-            margin-right: 60px; /* Add some spacing between nav and logout button */
+            margin-right: 60px; 
             height: 65px;
         }
 
@@ -50,7 +48,7 @@
         }
 
         nav li {
-            position: relative; /* Positioning relative to ensure the ::before applies to each li */
+            position: relative; 
             display: inline-block;
             margin-left: 40px;            
         }
@@ -62,7 +60,7 @@
             font-size: 16px;
             position: relative;
             display: inline-block;
-            padding: 23px 0; /* Add some padding to position the line correctly */
+            padding: 23px 0; 
         }
 
         nav a:hover {
@@ -70,7 +68,7 @@
         }
 
         nav a.active {
-            color: #000; /* Ensure the text stays black */
+            color: #000; 
         }
 
         nav a::before {
@@ -79,10 +77,10 @@
             height: 5px;
             background-color: rgba(47, 39, 206, 0.8);
             position: absolute;
-            top: 0; /* Adjust this to create space between the text and the underline */
+            top: 0; 
             bottom: 20px;
-            width: 0%; /* Initial width */
-            transition: all ease-in-out 250ms; /* Smooth transition */
+            width: 0%; 
+            transition: all ease-in-out 250ms; 
         }
           
         nav a.active::before,
@@ -90,7 +88,6 @@
             width: 100%;
         }
 
-        /* Right side: logout button */
         .navbar .logout {
             display: flex;
             align-items: center;
@@ -108,7 +105,7 @@
         }
 
         .navbar .logout button:hover {
-            background-color: rgb(30, 30, 148); /* Change this to your desired hover color */
+            background-color: rgb(30, 30, 148); 
         }
 
         body {
@@ -117,10 +114,9 @@
             font-family: Arial, Helvetica, sans-serif;
             overflow-y: auto;
         }
-
-        /* Additional styles for the rest of the page */
+        
         .content {
-            margin-top: 70px; /* Create space for the fixed navbar */
+            margin-top: 70px; 
             padding: 20px;
         }
 
@@ -131,17 +127,14 @@
     </style>
 </head>
 <body>
-    <!-- Top Navigation -->
     <div class="navbar">
-        <!-- Logo on the left -->
         <a class="logo">1Two7</a>
-
         <div class="nav-right">
             <nav>
                 <ul>
-                <li><a href="{{ url_for('admin_blueprint.admin_dashboard') }}" class="active">Home</a></li>
-                <li><a href="{{ url_for('admin_blueprint.user_account') }}">User Account</a></li>
-                <li><a href="{{ url_for('admin_blueprint.user_profile') }}">User Profile</a></li>
+                <li><a href="{{ url_for('admin_blueprint.displayAdminDashboard') }}" class="{% if current_page == 'dashboard' %}active{% endif %}">Home</a></li>
+                <li><a href="{{ url_for('admin_blueprint.displayUserAccount') }}" class="{% if current_page == 'user_account' %}active{% endif %}">User Account</a></li>
+                <li><a href="{{ url_for('admin_blueprint.displayUserProfile') }}"  class="{% if current_page == 'user_profile' %}active{% endif %}">User Profile</a></li>
                 </ul>
             </nav>
 
@@ -151,9 +144,7 @@
                 </form>
             </div>
         </div>
-        
     </div>
-
 
         {% block content %}
 

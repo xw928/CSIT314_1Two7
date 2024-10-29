@@ -1,7 +1,13 @@
-from flask import Blueprint, render_template
+from flask import Blueprint, render_template, request, jsonify
+# from controller.user.loginController import LoginController
 
-used_car_agent_blueprint = Blueprint('used_car_agent_blueprint', __name__)
+agent_blueprint = Blueprint('agent_blueprint', __name__)
 
-@used_car_agent_blueprint.route("/agent/dashboard")
-def admin_dashboard():
-    return "this is used car agent dashboard"
+# For navigate to specific page
+@agent_blueprint.route('/agent_home')
+def agent_dashboard():
+    return render_template('Agent/agentDashboard.html', current_page='dashboard')
+
+@agent_blueprint.route('/agent_fb')
+def agent_feedback():
+    return render_template('Agent/agentFeedback.html', current_page='agent_fb')

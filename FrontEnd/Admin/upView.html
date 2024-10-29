@@ -1,0 +1,129 @@
+{% extends "Admin/adminFrame.html" %}
+
+{% block style %}
+
+.para {
+    margin-top: 8%; 
+    color: black;
+    text-align: center;
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: bold;
+    font-size: 40px;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 1.5%;
+    margin-bottom: 100px
+}
+
+.custom-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0; 
+ 
+    border-radius: 5px; 
+    box-shadow: 0 5px 10px rgba(192, 192, 192, 0.5); 
+}
+
+.custom-table th,
+.custom-table td {
+    padding: 1rem;
+}
+
+thead {
+    background-color: rgba(222, 220, 255, 0.4);
+}
+
+th {
+    text-align: left;
+    font-weight: 600;
+    color: #4a5568;
+}
+
+td {
+    border-bottom: 1.5px solid rgba(192, 192, 192, 0.2); 
+    color: #2d3748;
+}
+
+.status-badge{
+    display: inline-flex;
+    align-items: center;
+    padding: 0.25rem 0.75rem;
+    border-radius: 9999px;
+    font-size: 0.875rem;
+    font-weight: 500;
+}
+
+.status-active {
+    background-color: #DEF7EC;
+    color: #03543F;
+}
+
+.status-inactive {
+    background-color: #FDE8E8;
+    color: #9B1C1C;
+}
+
+tbody tr:hover {
+    background-color: #f7fafc;
+}
+
+/* Password field */
+.password-field {
+    font-family: monospace;
+    color: #718096;
+    font-size: 15px;
+}
+
+.error-message {
+    color: #ff0019;
+    font-size: 16px;
+    font-weight: 600;
+    margin-top: 5px;
+}
+
+{% endblock style %}
+
+{% block content %}
+
+<div class="para">
+    <p>View User Profile</p>
+</div>
+
+<div class="container">
+    <table class="custom-table">
+        <thead>
+            <tr>
+                <th>Profile ID</th>
+                <th>Role</th>
+                <th>Description</th>
+                <th>Profile Status</th>
+            </tr>
+        </thead>
+        <tbody>
+
+            {% if profile_info %}
+                {% for profile in profile_info %}
+                    <tr>
+                        <td>{{ profile.profile_id }}</td>
+                        <td>{{ profile.role|title }}</td>
+                        <td>{{ profile.description }}</td>
+                        <td>
+                            <span class="status-badge {% if profile.pf_status == 1 %}status-active{% else %}status-inactive{% endif %}">
+                                {{ 'Active' if profile.pf_status == 1 else 'Inactive' }}
+                            </span>
+                        </td>
+                    </tr>
+                {% endfor %}
+            {% else %}
+                <tr>
+                    <td colspan="5" class="error-message">No User Profile found...</td>
+                </tr>
+            {% endif %}
+        </tbody>
+    </table>
+</div>
+
+{% endblock content %}

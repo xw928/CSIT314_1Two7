@@ -3,8 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}"> -->
-    <title>1Two7</title>
+    <title>1Two7 Used Car</title>
     <style>
         /* Navbar Styles */
         .navbar {
@@ -139,8 +138,8 @@
         <div class="nav-right">
             <nav>
                 <ul>
-                <li><a href="#" class="active">Home</a></li>
-                <li><a href="#">Your Feedback</a></li>
+                <li><a href="{{ url_for('agent_blueprint.agent_dashboard') }}" class="{% if current_page == 'dashboard' %}active{% endif %}">Home</a></li>
+                <li><a href="{{ url_for('agent_blueprint.agent_feedback') }}" class="{% if current_page == 'agent_fb' %}active{% endif %}">Your Feedback</a></li>
                 </ul>
             </nav>
 
@@ -152,7 +151,6 @@
         </div>
         
     </div>
-
 
         {% block content %}
 

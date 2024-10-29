@@ -1,0 +1,270 @@
+{% extends "Admin/adminFrame.html" %}
+
+{% block style %}
+.para {
+    color: black;
+    text-align: center;
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: bold;
+    font-size: 40px;
+    margin-bottom:72px;
+}
+
+.container {
+    display: flex; 
+    justify-content: space-between; 
+    align-items: flex-start; 
+    margin: 40px auto;
+    max-width: 1200px; 
+    padding: 0 20px;
+}
+
+.left-column {
+    margin-top: 12%; 
+    flex: 1; 
+    max-width: 500px; 
+}
+
+.right-column {
+    margin-top: 16%; 
+    flex: 1; 
+    max-width: 500px; 
+}
+
+form {
+    width: 100%;
+}
+
+form div {
+    width: 100%;
+    margin-bottom: 25px;
+}
+
+label {
+    display: block;
+    color: rgb(71, 71, 71);
+    font-size: 18px;
+    margin-bottom: 2px;
+    font-weight: 500;
+}
+
+.form-group input {
+    width: 94.5%;
+    padding: 12px;
+    border: 1.5px solid #ddd;
+    border-radius: 6px;
+    font-size: 16px;
+    transition: border-color 0.2s;
+    margin-bottom:10px;
+} 
+
+.form-group input:{
+    outline: none;
+    border-color: rgba(68, 61, 255, 0.5);
+    border-width: 1.5px;
+}
+
+.form-group input:hover{
+    border-color: rgba(68, 61, 255, 0.5);
+    border-width: 1.5px;
+    background-color: rgba(222, 220, 255, 0.1); 
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); 
+}
+
+.find-button {
+    width: 100%;
+    padding: 12px;
+    background: #000;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    margin-top:30px;
+}
+
+.update-button {
+    margin-top:15%;
+    width: 41%;
+    padding: 12px;
+    background: #000;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    margin-right: 80px;
+
+}
+
+.suspend-button {
+    margin-top:15%;
+    width: 41%;
+    padding: 12px;
+    background: #000;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.suspend-button.disabled {
+    background-color: #ccc;
+    color: #666;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+.find-button:hover,
+.update-button:hover,
+.suspend-button:hover {
+    background: #333;
+}
+
+input::placeholder {
+    color: #999;
+}
+
+.message {
+    margin-top:30px;
+    display: inline-flex;
+    align-items: center;
+    padding: 0.5rem 1rem;
+    border-radius: 9999px;
+    font-size: 1rem;
+    font-weight: 500;
+    text-align: center;
+    margin-bottom:35px;
+}
+
+.message-success {
+    background-color: #DEF7EC;
+    color: #03543F;
+}
+
+.message-error {
+    background-color: #FDE8E8;
+    color: #9B1C1C;
+}
+
+.custom-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0; 
+    border-radius: 5px; 
+    box-shadow: 0 5px 10px rgba(192, 192, 192, 0.5); 
+}
+
+.custom-table th,
+.custom-table td {
+    padding: 0.75rem;
+    width: 50%;
+}
+
+thead {
+    background-color: rgba(222, 220, 255, 0.4);
+}
+
+th {
+    text-align: left;
+    font-weight: 600;
+    color: #4a5568;
+}
+
+td {
+    border-bottom: 1.5px solid rgba(192, 192, 192, 0.2); 
+    color: #2d3748;
+}
+
+.status-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.25rem 0.75rem;
+    border-radius: 9999px;
+    font-size: 0.925rem;
+    font-weight: 500;
+}
+
+.status-active {
+    background-color: #DEF7EC;
+    color: #03543F;
+}
+
+.status-inactive {
+    background-color: #FDE8E8;
+    color: #9B1C1C;
+}
+
+{% endblock style %}
+
+{% block content %}
+<div class="container">
+    <div class="left-column">
+        <div class="para">
+            <p>Search User Profile</p>
+        </div>
+
+        <form action="{{ url_for('admin_blueprint.displaySearchUserProfile') }}" method="POST">
+
+            <div class="form-group">
+                <label for="role">Role:</label><br>
+                <input type="text" id="role" name="role" placeholder="Enter role" required oninput="this.value = this.value.toLowerCase(); ">
+            </div>
+
+            <button class="find-button" type="submit">Search User Profile</button>
+
+            {% if message %}
+                <p class="message {% if message_type == 'success' %}message-success{% elif message_type == 'error' %}message-error{% endif %}">
+                    {{ message }}
+                </p>
+            {% endif %}
+            
+        </form>
+    </div>
+
+    <div class="right-column">
+        <div>
+            {% set status = { 1: 'Active', 0: 'Inactive' } %}
+            {% if profile_info %}
+            <table class="custom-table">
+                <thead>
+                    <tr>
+                        <th colspan="2" style="text-align: center;">User Profile Details</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Profile ID:</strong></td>
+                        <td>{{ profile_info.profile_id }}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Role:</strong></td>
+                        <td>{{ profile_info.role|title }}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Description:</strong></td>
+                        <td>{{ profile_info.description }}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Profile Status:</strong></td>
+                        <td>
+                            <span class="status-badge {% if profile_info.pf_status == 1 %}status-active{% else %}status-inactive{% endif %}">
+                                {{ 'Active' if profile_info.pf_status == 1 else 'Inactive' }}
+                            </span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <div>
+                <button class="update-button" onclick="window.location.href='/update_up'">Update</button>
+                <button class="suspend-button {% if profile_info.pf_status == 0 %}disabled{% endif %}" onclick="window.location.href='/suspend_up'">Suspend</button>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock content %}

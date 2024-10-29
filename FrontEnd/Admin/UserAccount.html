@@ -23,7 +23,7 @@
     flex: 0 0 15%;
     background-color: rgba(222, 220, 255, 0.3);
     padding: 40px;
-    margin: 20px;
+    margin: 40px;
     flex-direction: box;
     align-items: center;
     text-align: center;
@@ -34,10 +34,9 @@
 }
 
 .box img {
-    max-width: 60%;
+    max-width: 80%;
     height: auto;
-    margin-bottom: 10px;
-    margin-top:10px
+    margin-bottom: 15px;
 }
 
 .box h4 {
@@ -60,31 +59,19 @@ button[class="box"]:hover {
 </div>
 
 <div class="container">
-    <button class="box" onclick="location.href='/'">
+    <button class="box" onclick="window.location.href='/create_ua'">
         <img src="{{ url_for('static', filename='accCreate.png')}}" alt="Image">
         <h4>Create</h4>
         <h4>User Account</h4>
     </button>
 
-    <button class="box" onclick="location.href='/'">
+    <button class="box" onclick="window.location.href='/view_ua'">
         <img src="{{ url_for('static', filename='accView.png')}}" alt="Image">
         <h4>View</h4>
         <h4>User Account</h4>
     </button>
 
-    <button class="box" onclick="window.location.href='/'">
-        <img src="{{ url_for('static', filename='accUpdate.png')}}" alt="Image">
-        <h4>Update</h4>
-        <h4>User Account</h4>
-    </button>
-
-    <button class="box" onclick="window.location.href='/'">
-        <img src="{{ url_for('static', filename='accDelete.png')}}" alt="Image">
-        <h4>Delete</h4>
-        <h4>User Account</h4>
-    </button>
-
-    <button class="box" onclick="window.location.href='/'">
+    <button class="box" onclick="window.location.href='/search_ua'">
         <img src="{{ url_for('static', filename='accSearch.png')}}" alt="Image">
         <h4>Search</h4>
         <h4>User Account</h4>

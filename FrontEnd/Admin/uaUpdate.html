@@ -1,0 +1,221 @@
+{% extends "Admin/adminFrame.html" %}
+
+{% block style %}
+.para {
+    margin-top: 6%; 
+    color: black;
+    text-align: center;
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: bold;
+    font-size: 40px;
+    margin-bottom: 40px;
+}
+
+.container {
+    max-width: 500px;
+    margin: 25px auto;
+    padding: 0 20px;
+}
+
+form {
+    width: 100%;
+}
+
+form div {
+    width: 100%;
+    margin-bottom: 25px;
+}
+
+label {
+    display: block;
+    color: rgb(71, 71, 71);
+    font-size: 18px;
+    margin-bottom: 10px;
+    font-weight: 500;
+}
+
+.form-group input {
+    width: 94.5%;
+    padding: 12px;
+    border: 1.5px solid #ddd;
+    border-radius: 6px;
+    font-size: 16px;
+    transition: border-color 0.2s;
+    margin-bottom:10px;
+} 
+
+.form-group select {
+    width: 100%;
+    padding: 12px;
+    border: 1.5px solid #ddd;
+    border-radius: 6px;
+    font-size: 16px;
+    transition: border-color 0.2s;
+    margin-bottom:10px;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+    outline: none;
+    border-color: rgba(68, 61, 255, 0.5);
+    border-width: 1.5px;
+}
+
+.form-group input:hover,
+.form-group select:hover {
+    border-color: rgba(68, 61, 255, 0.5);
+    border-width: 1.5px;
+    background-color: rgba(222, 220, 255, 0.1); 
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); 
+}
+
+.button {
+    width: 100%;
+    padding: 12px;
+    background: #000;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.button:hover,
+.find-button:hover {
+    background: #333;
+}
+
+.message {
+    margin-top:30px;
+    display: inline-flex;
+    align-items: center;
+    padding: 0.75rem 1.25rem;
+    border-radius: 9999px;
+    font-size: 1rem;
+    font-weight: 500;
+    text-align: center;
+}
+
+.message-success {
+    background-color: #DEF7EC;
+    color: #03543F;
+}
+
+.message-error {
+    background-color: #FDE8E8;
+    color: #9B1C1C;
+}
+
+.columns-container {
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center;
+}
+
+.left-column {
+    flex: 1; 
+    max-width: 300px; 
+}
+
+.right-column {
+    flex: 1; 
+    max-width: 170px; 
+    text-align: right;
+    margin-top:27px;
+}
+
+.right-column a {
+    color: #000;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.right-column a:hover {
+    text-decoration: underline;
+}
+
+{% endblock style %}
+
+{% block content %}
+<div class="para">
+    <p>Update User Account</p>
+</div>
+
+<div class="container">
+    <form action="{{ url_for('admin_blueprint.displayUpdateUserAccount') }}" method="POST" onsubmit="return validateForm()">
+        
+        <div class="form-group">
+            <label for="new_username">Username:</label>
+            <input type="text" id="new_username" name="new_username" value="{{ user_info['username'] if user_info else '' }}" required>
+        </div>
+
+        <div class="form-group">
+            <label for="new_password">Password:</label>
+            <input type="text" id="new_password" name="new_password" value="{{ user_info['password'] if user_info else '' }}" required>
+        </div>
+
+        <div class="form-group">
+            <label for="new_role">New Role:</label>
+            <select id="new_role" name="new_role" required>
+                <option value="">Select Role</option>
+                <option value="1" {% if user_info and user_info['profile_id'] == 1 %}selected{% endif %}>User Admin</option>
+                <option value="2" {% if user_info and user_info['profile_id'] == 2 %}selected{% endif %}>Used Car Agent</option>
+                <option value="3" {% if user_info and user_info['profile_id'] == 3 %}selected{% endif %}>Seller</option>
+                <option value="4" {% if user_info and user_info['profile_id'] == 4 %}selected{% endif %}>Buyer</option>
+            </select>
+        </div>
+
+        <!-- Account Status Selection -->
+        <div class="form-group">
+            <label for="new_status">Account Status:</label>
+            <select id="new_status" name="new_status">
+                <option value="">Select Status</option>
+                <option value="1" {% if user_info and user_info['acc_status'] == 1 %}selected{% endif %}>Active</option>
+                <option value="0" {% if user_info and user_info['acc_status'] == 0 %}selected{% endif %}>Inactive</option>
+            </select>
+        </div>
+
+        <button class="button" type="submit">Update User Account</button>
+        
+    </form>
+
+    <div class="columns-container">
+        <div class="left-column">
+            {% if message %}
+                <p class="message {% if message_type == 'success' %}message-success{% elif message_type == 'error' %}message-error{% endif %}">
+                    {{ message }}
+                </p>
+            {% endif %}
+        </div>
+
+        <div class="right-column">
+            Back to <a onclick="window.location.href='/search_ua'">Search Page</a>
+        </div>
+    </div>
+</div>
+
+<script>
+    function validateForm() {
+        const newUsername = document.getElementById('new_username').value;
+        const newPassword = document.getElementById('new_password').value;
+        const newRole = document.getElementById('new_role').value;
+        const newStatus = document.getElementById('new_status').value;
+    
+        // Check if at least one field is different from the initial values
+        if (
+            newUsername !== "{{ user_info['username'] if user_info else '' }}" ||
+            newPassword !== "{{ user_info['password'] if user_info else '' }}" ||
+            newRole !== "{{ user_info['profile_id'] if user_info else '' }}" ||
+            newStatus !== "{{ user_info['acc_status'] if user_info else '' }}"
+        ) {
+            return true; 
+        }
+    
+        alert('Please change at least one field before submitting.'); 
+        return false; 
+    }
+</script>
+
+
+{% endblock content %}

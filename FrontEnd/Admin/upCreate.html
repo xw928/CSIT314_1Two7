@@ -1,0 +1,145 @@
+{% extends "Admin/adminFrame.html" %}
+
+{% block style %}
+.para {
+    margin-top: 10%; 
+    color: black;
+    text-align: center;
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: bold;
+    font-size: 40px;
+    margin-bottom: 50px;
+}
+
+.container {
+    max-width: 500px;
+    margin: 40px auto;
+    padding: 0 20px;
+}
+
+form {
+    width: 100%;
+}
+
+form div {
+    width: 100%;
+    margin-bottom: 30px;
+}
+
+label {
+    display: block;
+    color: rgb(71, 71, 71);
+    font-size: 18px;
+    margin-bottom: 2px;
+    font-weight: 500;
+}
+
+.form-group input {
+    width: 94.5%;
+    padding: 12px;
+    border: 1.5px solid #ddd;
+    border-radius: 6px;
+    font-size: 16px;
+    transition: border-color 0.2s;
+    margin-bottom:10px;
+} 
+
+.form-group select {
+    width: 100%;
+    padding: 12px;
+    border: 1.5px solid #ddd;
+    border-radius: 6px;
+    font-size: 16px;
+    transition: border-color 0.2s;
+    margin-bottom:20px;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+    outline: none;
+    border-color: rgba(68, 61, 255, 0.5);
+    border-width: 1.5px;
+}
+
+.form-group input:hover,
+.form-group select:hover {
+    border-color: rgba(68, 61, 255, 0.5);
+    border-width: 1.5px;
+    background-color: rgba(222, 220, 255, 0.1); 
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); 
+}
+
+.button {
+    width: 100%;
+    padding: 12px;
+    background: #000;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    margin-top:10px;
+}
+
+.button:hover {
+    background: #333;
+}
+
+input::placeholder {
+    color: #999;
+}
+
+.message {
+    margin-top:30px;
+    display: inline-flex;
+    align-items: center;
+    padding: 0.75rem 1.25rem;
+    border-radius: 9999px;
+    font-size: 1rem;
+    font-weight: 500;
+    text-align: center;
+}
+
+.message-success {
+    background-color: #DEF7EC;
+    color: #03543F;
+}
+
+.message-error {
+    background-color: #FDE8E8;
+    color: #9B1C1C;
+}
+
+{% endblock style %}
+
+{% block content %}
+
+<div class="para">
+    <p>Create User Profile</p>
+</div>
+
+<div class="container">
+    <form id="userProfileForm" action="{{ url_for('admin_blueprint.displayCreateUserProfile') }}" method="POST">
+
+        <div class="form-group">
+            <label for="role">Role:</label><br>
+            <input type="text" id="role" name="role" placeholder="Enter new role">
+        </div>
+
+        <div class="form-group">
+            <label for="description">Description:</label><br>
+            <input type="text" id="description" name="description" placeholder="Enter description for the role">
+        </div>
+
+        <button class="button" type="submit">Create User Profile</button>
+
+        {% if message %}
+            <p class="message {% if message_type == 'success' %}message-success{% elif message_type == 'error' %}message-error{% endif %}">
+                {{ message }}
+            </p>
+        {% endif %}
+    </form>
+</div>
+
+{% endblock content %}
