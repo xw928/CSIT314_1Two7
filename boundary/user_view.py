@@ -42,9 +42,9 @@ def displayDashboard():
         elif session['role'] == 2:
             return render_template('Agent/agentDashboard.html', current_page='dashboard')
         elif session['role'] == 3:
-            return render_template('Seller/sellerDashboard.html', current_page='dashboard')
-        elif session['role'] == 4:
             return render_template('Buyer/buyerDashboard.html', current_page='dashboard')
+        elif session['role'] == 4:
+            return render_template('Seller/sellerDashboard.html', current_page='dashboard')
         else:
             return redirect(url_for("user_view_blueprint.displayLoginPage"))
            
