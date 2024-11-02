@@ -1,0 +1,391 @@
+{% extends "Agent/agentFrame.html" %}
+
+{% block style %}
+.para {
+    margin-top: 6.5%; 
+    color: black;
+    text-align: center;
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: bold;
+    font-size: 40px;
+    margin-bottom: 45px;
+}
+
+.container {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin: 40px auto 0px;
+    max-width: 1500px;
+    padding: 0 20px;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+  
+  .left-column, .middle-column, .right-column {
+    flex-basis: 32%;
+    max-width: 30%;
+    margin-bottom:0px;
+  }
+  
+  @media (max-width: 1024px) {
+    .left-column, .middle-column, .right-column {
+      flex-basis: 100%;
+      max-width: 100%;
+    }
+}
+
+.container-bottom {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin: 1px auto 1px;
+    max-width: 1500px;
+    padding: 0 10px;
+    flex-wrap: wrap;
+}
+
+form {
+    width: 100%;
+}
+
+form div {
+    width: 100%;
+    margin-bottom: 25px;
+}
+
+label {
+    display: block;
+    color: rgb(71, 71, 71);
+    font-size: 18px;
+    margin-bottom: 2px;
+    font-weight: 500;
+    margin-bottom:10px;
+}
+
+span {
+    display: block;
+    color: rgb(71, 71, 71);
+    font-size: 18px;
+    margin-bottom: 2px;
+    font-weight: 500;
+    margin-bottom:10px;
+}
+
+.status select {
+    width: 75.5%;
+    padding: 12px;
+    border: 1.5px solid #ddd;
+    border-radius: 6px;
+    font-size: 16px;
+    transition: border-color 0.2s;
+    margin-bottom:12px;
+
+}
+
+.form-group input {
+    width: 94.5%;
+    padding: 12px;
+    border: 1.5px solid #ddd;
+    border-radius: 6px;
+    font-size: 16px;
+    transition: border-color 0.2s;
+    margin-bottom:12px;
+} 
+
+.form-group select {
+    width: 100%;
+    padding: 12px;
+    border: 1.5px solid #ddd;
+    border-radius: 6px;
+    font-size: 16px;
+    transition: border-color 0.2s;
+    margin-bottom:12px;
+}
+
+.form-group textarea {
+    width: 94.5%;             
+    height: 55px;           
+    padding: 12px;           
+    border: 1.5px solid #ddd; 
+    border-radius: 6px;     
+    font-size: 16px;        
+    resize: vertical;        
+    transition: border-color 0.2s; 
+
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: rgba(68, 61, 255, 0.5);
+    border-width: 1.5px;
+}
+
+.form-group input:hover,
+.form-group select:hover {
+    border-color: rgba(68, 61, 255, 0.5);
+    border-width: 1.5px;
+    background-color: rgba(222, 220, 255, 0.1); 
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); 
+}
+
+.button {
+    margin-top:10px;
+    width: 100%;
+    padding: 12px;
+    background: #000;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.button:hover {
+    background: #333;
+}
+
+input::placeholder {
+    color: #999;
+}
+
+.message {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.75rem 1.25rem;
+    border-radius: 9999px;
+    font-size: 1rem;
+    font-weight: 500;
+    text-align: center;
+}
+
+.message-success {
+    background-color: #DEF7EC;
+    color: #03543F;
+}
+
+.message-error {
+    background-color: #FDE8E8;
+    color: #9B1C1C;
+}
+
+.columns-container {
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center;
+    margin-bottom:0px;
+}
+
+.left-bottom-column {
+    flex: 1; 
+    max-width: 1000px; 
+    margin-bottom:0px;
+}
+
+.right-bottom-column {
+    flex: 1; 
+    max-width: 170px; 
+    text-align: right;
+    color: rgb(30, 30, 148);
+    margin-bottom:0px;
+}
+
+.right-bottom-column a {
+    color: rgb(30, 30, 148);
+    text-decoration: none;
+    margin-bottom:0px;
+}
+
+.right-bottom-column a:hover {
+    text-decoration: underline;
+    margin-bottom:0px;
+}
+
+{% endblock style %}
+
+{% block content %}
+
+<div class="para">
+    <p>Update Used Car Listing</p>
+</div>
+
+<form action="{{ url_for('agent_blueprint.displayUpdateUsedCarList') }}" method="POST" onsubmit="return validateForm()">
+    <div class="container">
+        <section class="left-column">
+            <!-- Car ID (hidden) -->
+            <input type="hidden" name="car_id" value="{{ car_info['car_id'] if car_info else '' }}">
+
+            <!-- Seller Username -->
+            <div class="form-group">
+                <label for="new_seller_username">Seller Username:</label>
+                <input type="text" id="new_seller_username" name="new_seller_username" placeholder="Enter Seller's Username" value="{{ car_info['seller_username'] if car_info else '' }}" required oninput="this.value = this.value.toLowerCase();">
+            </div>
+
+            <!-- Car Type -->
+            <div class="form-group">
+                <label for="new_car_type">Car Type:</label>
+                <input type="text" id="new_car_type" name="new_car_type" placeholder="Enter car type" value="{{ car_info['car_type'] if car_info else '' }}" required>
+            </div>
+
+            <!-- Brand -->
+            <div class="form-group">
+                <label for="new_brand">Brand:</label>
+                <input type="text" id="new_brand" name="new_brand" placeholder="Enter brand" value="{{ car_info['brand'] if car_info else '' }}" required>
+            </div>
+
+            <!-- Model -->
+            <div class="form-group">
+                <label for="new_model">Model:</label>
+                <input type="text" id="new_model" name="new_model" placeholder="Enter car model" value="{{ car_info['model'] if car_info else '' }}" required>
+            </div>
+        </section>
+
+        <section class="middle-column">
+            <!-- Year -->
+            <div class="form-group">
+                <label for="new_year">Year:</label>
+                <input type="number" id="new_year" name="new_year" placeholder="Enter manufacturing year" value="{{ car_info['year'] if car_info else '' }}" required>
+            </div>
+
+            <!-- Price -->
+            <div class="form-group">
+                <label for="new_price">Price ($):</label>
+                <input type="number" id="new_price" name="new_price" placeholder="Enter price" step="0.01" value="{{ car_info['price'] if car_info else '' }}" required>
+            </div>
+
+            <!-- Fuel Type -->
+            <div class="form-group">
+                <label for="new_fuel_type">Fuel Type:</label>
+                <select id="new_fuel_type" name="new_fuel_type" required>
+                    <option value="">Select Fuel Type</option>
+                    <option value="Petrol" {% if car_info and car_info['fuel_type'] == 'Petrol' %}selected{% endif %}>Petrol</option>
+                    <option value="Diesel" {% if car_info and car_info['fuel_type'] == 'Diesel' %}selected{% endif %}>Diesel</option>
+                    <option value="Electric" {% if car_info and car_info['fuel_type'] == 'Electric' %}selected{% endif %}>Electric</option>
+                    <option value="Hybrid" {% if car_info and car_info['fuel_type'] == 'Hybrid' %}selected{% endif %}>Hybrid</option>
+                </select>
+            </div>
+
+            <!-- Mileage -->
+            <div class="form-group">
+                <label for="new_mileage">Mileage (km):</label>
+                <input type="number" id="new_mileage" name="new_mileage" placeholder="Enter mileage" value="{{ car_info['mileage'] if car_info else '' }}" required>
+            </div>
+        </section>
+
+        <section class="right-column">
+            <!-- Transmission -->
+            <div class="form-group">
+                <label for="new_transmission">Transmission:</label>
+                <select id="new_transmission" name="new_transmission" required>
+                    <option value="">Select Transmission</option>
+                    <option value="Automatic" {% if car_info and car_info['transmission'] == 'Automatic' %}selected{% endif %}>Automatic</option>
+                    <option value="Manual" {% if car_info and car_info['transmission'] == 'Manual' %}selected{% endif %}>Manual</option>
+                </select>
+            </div>
+
+            <!-- Engine Size -->
+            <div class="form-group">
+                <label for="new_engine_size">Engine Size (L):</label>
+                <input type="number" id="new_engine_size" name="new_engine_size" placeholder="Enter engine size" step="0.1" value="{{ car_info['engine_size'] if car_info else '' }}" required>
+            </div>
+
+            <!-- Description -->
+            <div class="form-group">
+                <label for="new_description">Description:</label>
+                <textarea id="new_description" name="new_description" placeholder="e.g: number of seats, condition, accessories, service history, etc..." rows="4" required>{{ car_info['description'] if car_info else '' }}</textarea>
+            </div>
+
+            <!-- Account Status Selection -->
+            <div class="status">
+                <span for="new_status">Car Status: &nbsp;&nbsp;
+                    <select id="new_status" name="new_status">
+                        <option value="">Select Status</option>
+                        <option value="1" {% if car_info and car_info['car_status'] == 1 %}selected{% endif %}>Available</option>
+                        <option value="0" {% if car_info and car_info['car_status'] == 0 %}selected{% endif %}>Sold</option>
+                    </select>
+                </span>
+            </div>
+
+            <!-- Agent ID (hidden field if agent is logged in) -->
+            <input type="hidden" name="agent_username" value="{{ car_info['agent_username'] if car_info else '' }}">
+        </div>
+    </section>
+
+    <section class="container-bottom">
+        <!-- Submit Button -->
+        <button class="button" type="submit">Update Used Car Listing</button>
+
+        <div class="columns-container">
+            <span class="left-bottom-column">
+                {% if message %}
+                    <p class="message {% if message_type == 'success' %}message-success{% elif message_type == 'error' %}message-error{% endif %}">
+                        {{ message }}
+                    </p>
+                {% endif %}
+            </span>
+    
+            <span class="right-bottom-column" style="font-size: 1.1rem; font-weight: 500;">
+                Back to <a onclick="window.location.href='/view_car'">View Page</a>
+            </span>
+        </div>
+    </section>
+</form>
+
+<script>
+  
+    function validateForm() {
+        const sellerUsername = document.getElementById('new_seller_username').value;
+        const carType = document.getElementById('new_type').value;
+        const brand = document.getElementById('new_brand').value;
+        const model = document.getElementById('new_model').value;
+        const year = document.getElementById('new_year').value;
+        const price = document.getElementById('new_price').value;
+        const fuelType = document.getElementById('new_fuel_type').value;
+        const mileage = document.getElementById('new_mileage').value;
+        const transmission = document.getElementById('new_transmission').value;
+        const engineSize = document.getElementById('new_engine_size').value;
+        const description = document.getElementById('new_description').value;
+        const carStatus = document.getElementById('new_status').value;
+        
+        const initialValues = {
+            sellerUsername: "{{ car_info['seller_username'] if car_info else '' }}",
+            carType: "{{ car_info['car_type'] if car_info else '' }}",
+            brand: "{{ car_info['brand'] if car_info else '' }}",
+            model: "{{ car_info['model'] if car_info else '' }}",
+            year: "{{ car_info['year'] if car_info else '' }}",
+            price: "{{ car_info['price'] if car_info else '' }}",
+            fuelType: "{{ car_info['fuel_type'] if car_info else '' }}",
+            mileage: "{{ car_info['mileage'] if car_info else '' }}",
+            transmission: "{{ car_info['transmission'] if car_info else '' }}",
+            engineSize: "{{ car_info['engine_size'] if car_info else '' }}",
+            description: "{{ car_info['description'] if car_info else '' }}",
+            carStatus: "{{ car_info['car_status'] if car_info else '' }}"
+        };
+        
+        // Check if at least one field has been changed
+        if (
+            sellerUsername !== initialValues.sellerUsername ||
+            carType !== initialValues.carType ||
+            brand !== initialValues.brand ||
+            model !== initialValues.model ||
+            year !== initialValues.year ||
+            price !== initialValues.price ||
+            fuelType !== initialValues.fuelType ||
+            mileage !== initialValues.mileage ||
+            transmission !== initialValues.transmission ||
+            engineSize !== initialValues.engineSize ||
+            description !== initialValues.description ||
+            carStatus !== initialValues.carStatus
+        ) {
+            return true; 
+        }
+        // Alert if no changes have been made
+        alert('Please change at least one field before submitting.');
+        return false;
+    }
+</script>
+
+{% endblock content %}
