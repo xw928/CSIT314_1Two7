@@ -2,7 +2,7 @@
 
 {% block style %}
 .para {
-    margin-top: 12%; 
+    margin-top: 8%; 
     color: black;
     text-align: center;
     font-family: Arial, Helvetica, sans-serif;
@@ -12,12 +12,34 @@
 
 .container {
     display: flex;
-    justify-content: center;
-    align-items: center;
+    justify-content: left;
+    align-items: left;
     flex-wrap: wrap;
-    padding: 3%;
+    margin: 0px 50px;
+    max-width: 1600px;
+    margin-left:80px;
+    margin-top:0px;
 }
 
+.box {
+    margin:30px;
+    width: 260px;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    padding: 10px 30px;
+    box-shadow: 0px 1px 5px rgba(192, 192, 192, 0.5);
+
+}
+
+.box:hover {
+    background-color: rgba(222, 220, 255, 0.15);
+}
+
+.stars {
+    color: rgb(47, 39, 206);
+    font-size: 24px;
+}
 
 {% endblock style %}
 
@@ -27,8 +49,28 @@
     <p>View My Feedback</p>
 </div>
 
-<div class="container">
-    
-</div>
+<section class="container">
+    {% if message %}
+        <p class="message">
+            {{ message }}
+        </p>
+    {% endif %}
+    {% for feedback in feedback_info %}
+    <div class="box">
+        <p>Sender ID: {{ feedback.sender_id }}</p>
+        <p>Rating:&nbsp;&nbsp;
+            <span class="stars">
+                {% for i in range(feedback.rating) %}
+                    ★
+                {% endfor %}
+                {% for i in range(5 - feedback.rating) %}
+                    ☆
+                {% endfor %}
+            </span>
+        </p>
+        <p style="margin-top: 20px;">Review: {{ feedback.review }}</p>
+    </div>
+    {% endfor %}
+</section>
 
 {% endblock content %}

@@ -1,0 +1,266 @@
+{% extends "Agent/agentFrame.html" %}
+
+{% block style %}
+.para {
+    margin-top: 6.5%; 
+    color: black;
+    text-align: center;
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: bold;
+    font-size: 40px;
+    margin-bottom: 45px;
+}
+
+.container {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin: 40px auto 0px;
+    max-width: 1500px;
+    padding: 0 20px;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+  
+  .left-column, .middle-column, .right-column {
+    flex-basis: 32%;
+    max-width: 30%;
+    margin-bottom:0pxl
+  }
+  
+  @media (max-width: 1024px) {
+    .left-column, .middle-column, .right-column {
+      flex-basis: 100%;
+      max-width: 100%;
+    }
+}
+
+.container-bottom {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin: 1px auto 1px;
+    max-width: 1500px;
+    padding: 0 10px;
+ 
+    flex-wrap: wrap;
+}
+
+form {
+    width: 100%;
+}
+
+form div {
+    width: 100%;
+    margin-bottom: 25px;
+}
+
+label {
+    display: block;
+    color: rgb(71, 71, 71);
+    font-size: 18px;
+    margin-bottom: 2px;
+    font-weight: 500;
+    margin-bottom:10px;
+}
+
+.form-group input {
+    width: 94.5%;
+    padding: 12px;
+    border: 1.5px solid #ddd;
+    border-radius: 6px;
+    font-size: 16px;
+    transition: border-color 0.2s;
+    margin-bottom:12px;
+} 
+
+.form-group select {
+    width: 100%;
+    padding: 12px;
+    border: 1.5px solid #ddd;
+    border-radius: 6px;
+    font-size: 16px;
+    transition: border-color 0.2s;
+    margin-bottom:12px;
+}
+
+.form-group textarea {
+    width: 94.5%;             
+    height: 132px;           
+    padding: 12px;           
+    border: 1.5px solid #ddd; 
+    border-radius: 6px;     
+    font-size: 16px;        
+    resize: vertical;        
+    transition: border-color 0.2s; 
+    margin-bottom:12px;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: rgba(68, 61, 255, 0.5);
+    border-width: 1.5px;
+}
+
+.form-group input:hover,
+.form-group select:hover {
+    border-color: rgba(68, 61, 255, 0.5);
+    border-width: 1.5px;
+    background-color: rgba(222, 220, 255, 0.1); 
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); 
+}
+
+.button {
+    margin-top:10px;
+    width: 100%;
+    padding: 12px;
+    background: #000;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.button:hover {
+    background: #333;
+}
+
+input::placeholder {
+    color: #999;
+}
+
+.message {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.75rem 1.25rem;
+    border-radius: 9999px;
+    font-size: 1rem;
+    font-weight: 500;
+    text-align: center;
+}
+
+.message-success {
+    background-color: #DEF7EC;
+    color: #03543F;
+}
+
+.message-error {
+    background-color: #FDE8E8;
+    color: #9B1C1C;
+}
+
+{% endblock style %}
+
+{% block content %}
+
+<div class="para">
+    <p>Create Used Car Listing</p>
+</div>
+
+<form action="{{ url_for('agent_blueprint.displayCreateUsedCarList') }}" method="POST">
+    <div class="container">
+        <section class="left-column">
+
+            <!-- Seller Username -->
+            <div class="form-group">
+                <label for="seller_username">Seller Username:</label>
+                <input type="text" id="seller_username" name="seller_username" placeholder="Enter Seller's Username" required oninput="this.value = this.value.toLowerCase();">
+            </div>
+
+            <!-- Car Type -->
+            <div class="form-group">
+                <label for="car_type">Car Type:</label>
+                <input type="text" id="car_type" name="car_type" placeholder="Enter car type" required>
+            </div>
+
+            <!-- Brand -->
+            <div class="form-group">
+                <label for="brand">Brand:</label>
+                <input type="text" id="brand" name="brand" placeholder="Enter brand" required>
+            </div>
+
+            <!-- Model -->
+            <div class="form-group">
+                <label for="model">Model:</label>
+                <input type="text" id="model" name="model" placeholder="Enter car model" required>
+            </div>
+        </section>
+
+        <section class="middle-column">
+            <!-- Year -->
+            <div class="form-group">
+                <label for="year">Year:</label>
+                <input type="number" id="year" name="year" placeholder="Enter manufacturing year" required>
+            </div>
+
+            <!-- Price -->
+            <div class="form-group">
+                <label for="price">Price ($):</label>
+                <input type="number" id="price" name="price" placeholder="Enter price" step="0.01" required>
+            </div>
+          
+            <!-- Fuel Type -->
+            <div class="form-group">
+                <label for="fuel_type">Fuel Type:</label>
+                <select id="fuel_type" name="fuel_type" required>
+                    <option value="">Select Fuel Type</option>
+                    <option value="Petrol">Petrol</option>
+                    <option value="Diesel">Diesel</option>
+                    <option value="Electric">Electric</option>
+                    <option value="Hybrid">Hybrid</option>
+                </select>
+            </div>
+
+            <!-- Mileage -->
+            <div class="form-group">
+                <label for="mileage">Mileage (km):</label>
+                <input type="number" id="mileage" name="mileage" placeholder="Enter mileage" required>
+            </div>
+        </section>
+
+        <section class="right-column">
+            <!-- Transmission -->
+            <div class="form-group">
+                <label for="transmission">Transmission:</label>
+                <select id="transmission" name="transmission" required>
+                    <option value="">Select Transmission</option>
+                    <option value="Automatic">Automatic</option>
+                    <option value="Manual">Manual</option>
+                </select>
+            </div>
+
+            <!-- Engine Size -->
+            <div class="form-group">
+                <label for="engine_size">Engine Size (L):</label>
+                <input type="number" id="engine_size" name="engine_size" placeholder="Enter engine size" step="0.1" required>
+            </div>
+
+            <!-- Description -->
+            <div class="form-group">
+                <label for="description">Description:</label>
+                <textarea id="description" name="description" placeholder="e.g: number of seats, condition, accessories, service history, etc..." rows="4" required></textarea>
+            </div>
+
+            <!-- Agent ID (hidden field if agent is logged in) -->
+            <input type="hidden" name="agent_username" value="{{ username }}">
+        </div>
+    </section>
+
+    <section class="container-bottom">
+        <!-- Submit Button -->
+        <button class="button" type="submit">Create Used Car Listing</button>
+
+        <!-- Feedback Message -->
+        {% if message %}
+            <p class="message {% if message_type == 'success' %}message-success{% elif message_type == 'error' %}message-error{% endif %}">
+                {{ message }}
+            </p>
+        {% endif %}
+    </section>
+</form>
+
+{% endblock content %}

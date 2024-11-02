@@ -1,0 +1,173 @@
+{% extends "Agent/agentFrame.html" %}
+
+{% block style %}
+.para {
+    color: black;
+    text-align: center;
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: bold;
+    font-size: 40px;
+    margin-bottom:72px;
+}
+
+.container {
+    display: flex; 
+    justify-content: space-between; 
+    align-items: flex-start; 
+    margin: 40px auto;
+    max-width: 1200px; 
+    padding: 0 20px;
+}
+
+.left-column {
+    margin-top: 8%; 
+    flex: 1; 
+    max-width: 600px; 
+    display: flex; 
+    align-items: center; 
+    justify-content: center;
+}
+
+.right-column {
+    margin-top: 16%; 
+    flex: 1; 
+    max-width: 600px; 
+}
+
+.box {
+    margin:30px;
+    width: 260px;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    padding: 10px 30px;
+    box-shadow: 0px 1px 5px rgba(192, 192, 192, 0.5);
+}
+
+.box:hover {
+    background-color: rgba(222, 220, 255, 0.15);
+}
+
+.price {
+    font-size: 20px;
+    font-weight: 600;
+    color: rgb(47, 39, 206);
+}
+
+.price span {
+    display: inline-block;
+}
+
+.icon-text {
+    font-family: 'Times New Roman', Times, serif;
+    display: inline-flex;
+    align-items: center; 
+    gap: 13px; 
+    margin: 0; 
+    font-size: 1.2rem;
+    font-weight: bold; 
+    color: #000;
+}
+
+.icon-text img {
+    height: 25px;
+}
+
+.button {
+    width: 100%;
+    padding: 12px;
+    background: #000;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    margin-top:40px;
+}
+
+.button:hover {
+    background: #333;
+}
+
+.message {
+    margin-top:1px;
+    display: inline-flex;
+    align-items: center;
+    padding: 0.5rem 1rem;
+    border-radius: 9999px;
+    font-size: 1rem;
+    font-weight: 500;
+    text-align: center;
+    margin-bottom:35px;
+    background-color: #DEF7EC;
+    color: #03543F;
+}
+
+.back-to {
+    margin-top:30px;
+    text-align: right;
+    color: rgb(30, 30, 148);
+}
+
+.back-to a {
+    color: rgb(30, 30, 148);
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.back-to a:hover {
+    text-decoration: underline;
+}
+
+
+{% endblock style %}
+
+{% block content %}
+
+<div class="container">
+    <div class="left-column">
+        <div class="box">
+            <p class="price">
+                {% if car_info.car_status == 0 %}
+                    <span style="text-decoration: line-through red;">${{ car_info.price }}</span>
+                    <span style="color: red; margin-left: 10px;">  Sold</span>
+                {% else %}
+                    ${{ car_info.price }}
+                {% endif %}
+            </p>
+            <p class="icon-text" style="margin: 0px;"><img src="{{ url_for('static', filename='car.png') }}" alt="car">{{ car_info.brand }} {{ car_info.model }}</p>
+            <p>Car ID: {{ car_info.car_id }}</p>
+            <p>Car Type: {{ car_info.car_type }}</p>
+            <p>Year: {{ car_info.year }}</p>
+            <p>Fuel Type: {{ car_info.fuel_type }}</p>
+            <p>Mileage: {{ car_info.mileage }}</p>
+            <p>Transmission: {{ car_info.transmission }}</p>
+            <p>Engine Size: {{ car_info.engine_size }}L</p>
+            <p>Description: {{ car_info.description }}</p>
+            <p>View: {{ car_info.view }}</p>
+            <p>Shortlisted: {{ car_info.shortlisted }}</p>
+            <p>Seller Username: {{ car_info.seller_username }}</p>
+        </div>
+    </div>
+
+    <div class="right-column">  
+        <div class="para">
+            <p>Delete Used Car Listing</p>
+        </div>
+ 
+        <p style="font-size: 20px; text-align: center; display: flex; align-items: center; justify-content: center;">Are you sure want to delete this listing?</p>
+
+        <form action="{{ url_for('agent_blueprint.displayDeleteUsedCarList') }}" method="POST">
+            <input type="hidden" name="car_id" value="{{ car_info['car_id'] if car_info else '' }}">
+            <button class="button" type="submit">Yes, delete this used car listing</button>
+            <p class="back-to" style="font-size: 1.1rem; font-weight: 500;"> Back to <a onclick="window.location.href='/view_car'">View Page</a><p>
+            {% if message %}
+                <p class="message">
+                    {{ message }}
+                </p>
+            {% endif %}
+        </form>
+    </div>
+</div>
+{% endblock content %}

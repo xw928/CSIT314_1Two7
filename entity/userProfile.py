@@ -63,7 +63,9 @@ class userProfile():
                     cursor.execute(sql, (new_rolename, new_description, new_status, rolename))
                     connection.commit()
                     
-                    return True
+                    if cursor.rowcount > 0:
+                         print("Update successful.")
+                         return True
                     
           except Exception as e:
                print(f"Error occurred: {e}")

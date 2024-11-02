@@ -94,6 +94,8 @@ class userAccount():
                     cursor.execute(sql, (new_username, new_password, new_role, new_status, username))
                     connection.commit()
 
+               if cursor.rowcount > 0:
+                    print("Update successful.")
                     return True
                
           except Exception as e:
