@@ -35,7 +35,6 @@ def displayLogout():
 
 @user_view_blueprint.route('/dashboard', methods=['GET'])
 def displayDashboard():
-
     if "loggedIn" in session:
         if session['role'] == 1:
             return render_template('Admin/adminDashboard.html', current_page='dashboard')
