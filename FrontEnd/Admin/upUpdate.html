@@ -173,7 +173,7 @@ label {
         <div class="form-group">
             <label for="new_status">Profile Status:</label>
             <select id="new_status" name="new_status">
-                <option value="">Select Status</option>
+                <option value="" disabled>Select Status</option>
                 <option value="1" {% if profile_info and profile_info['pf_status'] == 1 %}selected{% endif %}>Active</option>
                 <option value="0" {% if profile_info and profile_info['pf_status'] == 0 %}selected{% endif %}>Inactive</option>
             </select>

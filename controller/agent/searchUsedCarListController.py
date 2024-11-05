@@ -1,6 +1,6 @@
 from entity.usedCarList import usedCarList
 
-class searchUsedCarListController():
+class searchAgentUsedCarListController():
     
-    def searchUsedCarList(self, agent_username, field, value):
-        return usedCarList().searchUsedCarList(agent_username, field, value)
+    def searchAgentUsedCarList(self, agent_username, field, value):
+        return usedCarList().searchAgentUsedCarList(agent_username, field, value)

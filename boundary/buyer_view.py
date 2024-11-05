@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, request, jsonify, session
 # from controller.user.loginController import LoginController
 
-from controller.buyer.searchUsedCarListController import searchUsedCarListController
+from controller.buyer.searchAvailableUsedCarListController import searchAvailableUsedCarListController
 from controller.buyer.buyerSubmitRatingController import buyerSubmitRatingController
 from controller.buyer.buyerSubmitReviewController import buyerSubmitReviewController
 from controller.buyer.viewAgentRatingController import viewAgentRatingController
@@ -25,13 +25,12 @@ def buyer_feedback():
 
 @buyer_blueprint.route('/buyer_search_car', methods=['GET', 'POST'])
 def displaySearchUsedCarList():
-    buyer_username = session.get('username')
 
     if request.method == 'POST':
         field = request.form.get('field')
         value = request.form.get('target')
 
-        cars_info = searchUsedCarListController().searchBuyerUsedCarList(buyer_username, field, value)
+        cars_info = searchAvailableUsedCarListController().searchAvailableUsedCarList(field, value)
         if cars_info:
             return render_template('Buyer/searchList.html', cars_info=cars_info)
         else:
@@ -39,6 +38,7 @@ def displaySearchUsedCarList():
         return render_template('Buyer/searchList.html', user_info=[], message=message)
     
     return render_template('Buyer/searchList.html')
+
 
 @buyer_blueprint.route('/buyer_fb', methods=['GET', 'POST'])
 def display_buyer_submit_feedback():
@@ -61,6 +61,7 @@ def display_buyer_submit_feedback():
             message_type = "error"
         return render_template('Buyer/buyerFeedback.html', message=message, message_type=message_type, current_page='buyer_fb')
     return render_template('Buyer/buyerFeedback.html', current_page='buyer_fb')
+
 
 @buyer_blueprint.route('/view_rr', methods=['GET'])
 def displayViewAgentRR():

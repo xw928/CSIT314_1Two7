@@ -3,7 +3,7 @@ from controller.agent.createUsedCarListController import createUsedCarListContro
 from controller.agent.viewUsedCarListController import viewUsedCarListController
 from controller.agent.updateUsedCarListController import updateUsedCarListController
 from controller.agent.deleteUsedCarListController import deleteUsedCarListController
-from controller.agent.searchUsedCarListController import searchUsedCarListController
+from controller.agent.searchAgentUsedCarListController import searchAgentUsedCarListController
 from controller.agent.getRatingController import getRatingController
 from controller.agent.getReviewController import getReviewController
 
@@ -137,7 +137,7 @@ def displaySearchUsedCarList():
         field = request.form.get('field')
         value = request.form.get('target')
 
-        cars_info = searchUsedCarListController().searchUsedCarList(agent_username, field, value)
+        cars_info = searchAgentUsedCarListController().searchAgentUsedCarList(agent_username, field, value)
         if cars_info:
             return render_template('Agent/searchList.html', cars_info=cars_info)
         else:
