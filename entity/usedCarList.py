@@ -6,7 +6,7 @@ class usedCarList():
         config = {
             'host': 'localhost',
             'user': 'root',
-            'password': 'Kxw92803',
+            'password': '1234',
             'database': 'used_car_app',
             'cursorclass': pymysql.cursors.DictCursor
         }
@@ -227,6 +227,69 @@ class usedCarList():
                 else:
                     print("Error: Agent username not found.")
                     return None
+
+        except Exception as e:
+            print(f"Error occurred: {e}")
+            return False
+        finally:
+            connection.close()
+
+    def searchBuyerUsedCarList(self, buyer_username, field, value):
+        connection = self.getDBConnection()
+        try:
+            with connection.cursor() as cursor:               
+
+                sql = ""
+                if field == 'price':
+                    sql = """
+                    SELECT 
+                        ucl.car_id, ucl.car_type, ucl.year, ucl.brand, ucl.model, ucl.price,
+                        ucl.fuel_type, ucl.mileage, ucl.transmission, ucl.engine_size, 
+                        ucl.description, ucl.view, ucl.shortlisted, ua.username AS agent_username
+                    FROM 
+                        Used_Car_List ucl
+                    INNER JOIN 
+                        User_Account ua ON ucl.agent_id = ua.user_id
+                    WHERE                   
+                        ucl.price <= %s
+                    ORDER BY 
+                        ucl.car_id;
+                    """
+                elif field == 'agent_username':
+                    sql = """
+                    SELECT 
+                        ucl.car_id, ucl.car_type, ucl.year, ucl.brand, ucl.model, ucl.price,
+                        ucl.fuel_type, ucl.mileage, ucl.transmission, ucl.engine_size, 
+                        ucl.description, ucl.view, ucl.shortlisted, ua.username AS agent_username
+                    FROM 
+                        Used_Car_List ucl
+                    INNER JOIN 
+                        User_Account ua ON ucl.agent_id = ua.user_id
+                    WHERE 
+                        ua.username = %s
+                    ORDER BY 
+                        ucl.car_id;
+                    """
+                else:
+                    sql = f"""
+                    SELECT 
+                        ucl.car_id, ucl.car_type, ucl.year, ucl.brand, ucl.model, ucl.price,
+                        ucl.fuel_type, ucl.mileage, ucl.transmission, ucl.engine_size, 
+                        ucl.description, ucl.view, ucl.shortlisted, ua.username AS agent_username
+                    FROM 
+                        Used_Car_List ucl
+                    INNER JOIN 
+                        User_Account ua ON ucl.agent_id = ua.user_id
+                    WHERE 
+                        {field} = %s
+                    ORDER BY 
+                        ucl.car_id;
+                    """
+                
+                cursor.execute(sql, (value))
+                cars_info = cursor.fetchall()
+
+                return cars_info
 
         except Exception as e:
             print(f"Error occurred: {e}")
