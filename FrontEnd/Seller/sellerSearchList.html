@@ -1,4 +1,4 @@
-{% extends "Agent/agentFrame.html" %}
+{% extends "Seller/sellerFrame.html" %}
 
 {% block style %}
 
@@ -137,7 +137,7 @@ input::placeholder {
     background-color: rgba(222, 220, 255, 0.15);
 }
 
-.box .price {
+.price {
     font-size: 20px;
     font-weight: 600;
     color: rgb(47, 39, 206);
@@ -180,7 +180,7 @@ input::placeholder {
 <div class="para">
     <p style="margin-bottom: 10px;">Search Used Car Listings</p>
 </div>
-<form action="{{ url_for('agent_blueprint.displaySearchUsedCarList') }}" method="POST" >
+<form action="{{ url_for('seller_blueprint.displaySearchUsedCarList') }}" method="POST" >
     <div class="top-container">
         <section class="left-column"> 
             <span for="field">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Search By: &nbsp;&nbsp;
@@ -190,7 +190,7 @@ input::placeholder {
                     <option value="brand">Brand</option>
                     <option value="model">Model</option>
                     <option value="price">Price</option>
-                    <option value="seller_username">Seller's Username</option>
+                    <option value="agent_username">Agent Username</option>
                 </select>
             </span>
         </section>
@@ -232,7 +232,7 @@ input::placeholder {
             <p>Description: {{ car.description }}</p>
             <p>View: {{ car.view }}</p>
             <p>Shortlisted: {{ car.shortlisted }}</p>
-            <p>Seller Username: {{ car.seller_username }}</p>
+            <p>Agent Username: {{ car.agent_username }}</p>
         </div>
         {% endfor %}
         {% endif %}
@@ -323,10 +323,10 @@ input::placeholder {
     
             inputContainer.appendChild(select);
             
-        } else if (fieldSelect.value === 'seller_username') {
+        } else if (fieldSelect.value === 'agent_username') {
             const input = document.createElement('input');
             input.type = 'text';
-            input.placeholder = 'Enter seller username...';
+            input.placeholder = 'Enter agent username...';
             input.id = 'target';
             input.name = 'target'; 
             input.required = true;

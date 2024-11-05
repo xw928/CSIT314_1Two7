@@ -154,9 +154,6 @@ def displayAgentFeedbackPage():
         ratings_info = getRatingController().getRating(agent_username)
         reviews_info = getReviewController().getReview(agent_username)
 
-        print(ratings_info)
-        print(reviews_info)
-
         if not ratings_info and not reviews_info:
             return render_template('Agent/agentFeedback.html', message="No Feedback Found", current_page='agent_feedback')
         
@@ -164,5 +161,4 @@ def displayAgentFeedbackPage():
         for rating, review in zip(ratings_info, reviews_info):
             feedback_info.append({"sender_id":rating['sender_id'],"rating":rating['rating'],"review":review['review']})
 
-        print(feedback_info)
         return render_template('Agent/agentFeedback.html', feedback_info=feedback_info, current_page='agent_feedback')       
