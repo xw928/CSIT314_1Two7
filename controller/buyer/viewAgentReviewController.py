@@ -2,5 +2,5 @@ from entity.review import review
 
 class viewAgentReviewController():
 
-    def viewAgentReview(self):
-        return review().viewAgentReview()
+    def getAllAgentReview(self):
+        return review().getAllAgentReview()

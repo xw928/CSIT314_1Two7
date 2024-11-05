@@ -20,9 +20,9 @@
 }
 
 .box {
-    flex: 0 0 5%;
+    flex: 0 0 18%;
     background-color: rgba(222, 220, 255, 0.3);
-    padding: 40px;
+    padding: 35px;
     margin: 30px;
     flex-direction: box;
     align-items: center;
@@ -67,7 +67,7 @@ button[class="box"]:hover {
         <h4>Used Car Listings</h4>
     </button>
 
-    <button class="box" onclick="window.location.href='/x'">
+    <button class="box" onclick="window.location.href='/view_rr'">
         <img src="{{ url_for('static', filename='Feedback.png')}}" alt="Image">
         <h4>View</h4>
         <h4>Used Car Agent Feedback</h4>
@@ -83,12 +83,6 @@ button[class="box"]:hover {
         <img src="{{ url_for('static', filename='calculator.png')}}" alt="Image">
         <h4>Use</h4>
         <h4>Loan Calculator</h4>
-    </button>
-
-    <button class="box" onclick="window.location.href='/view_rr'">
-        <img src="{{ url_for('static', filename='carSearch.png')}}" alt="Image">
-        <h4>View</h4>
-        <h4>Ratings & Reviews</h4>
     </button>
 
 </div>
