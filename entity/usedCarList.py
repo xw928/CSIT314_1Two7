@@ -6,7 +6,7 @@ class usedCarList():
         config = {
             'host': 'localhost',
             'user': 'root',
-            'password': '1234',
+            'password': 'Kxw92803',
             'database': 'used_car_app',
             'cursorclass': pymysql.cursors.DictCursor
         }
@@ -171,7 +171,7 @@ class usedCarList():
 
 
     # for agent search
-    def searchUsedCarList(self, agent_username, field, value):
+    def searchAgentUsedCarList(self, agent_username, field, value):
         connection = self.getDBConnection()
         try:
             with connection.cursor() as cursor:
@@ -242,7 +242,8 @@ class usedCarList():
         finally:
             connection.close()
             
-    def searchBuyerUsedCarList(self, buyer_username, field, value):
+    # for buyer seach available used car
+    def searchAvailableUsedCarList(self, field, value):
         connection = self.getDBConnection()
         try:
             with connection.cursor() as cursor:               
@@ -259,7 +260,7 @@ class usedCarList():
                     INNER JOIN 
                         User_Account ua ON ucl.agent_id = ua.user_id
                     WHERE                   
-                        ucl.price <= %s
+                        ucl.price <= %s AND ucl.car_status = 1
                     ORDER BY 
                         ucl.car_id;
                     """
@@ -274,7 +275,7 @@ class usedCarList():
                     INNER JOIN 
                         User_Account ua ON ucl.agent_id = ua.user_id
                     WHERE 
-                        ua.username = %s
+                        ua.username = %s AND ucl.car_status = 1
                     ORDER BY 
                         ucl.car_id;
                     """
@@ -289,15 +290,21 @@ class usedCarList():
                     INNER JOIN 
                         User_Account ua ON ucl.agent_id = ua.user_id
                     WHERE 
-                        {field} = %s
+                        {field} = %s AND ucl.car_status = 1
                     ORDER BY 
                         ucl.car_id;
                     """
-                
+
                 cursor.execute(sql, (value))
                 cars_info = cursor.fetchall()
 
                 return cars_info
+            
+        except Exception as e:
+            print(f"Error occurred: {e}")
+            return False
+        finally:
+            connection.close()
 
 
     # seller search

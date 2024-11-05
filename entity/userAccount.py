@@ -6,7 +6,7 @@ class userAccount():
                config = {
                     'host': 'localhost',
                     'user': 'root',
-                    'password': '1234',
+                    'password': 'Kxw92803',
                     'database': 'used_car_app',
                     'cursorclass': pymysql.cursors.DictCursor
           }
