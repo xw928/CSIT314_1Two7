@@ -66,11 +66,8 @@ def display_buyer_submit_feedback():
 @buyer_blueprint.route('/view_rr', methods=['GET'])
 def displayViewAgentRR():
     if request.method == 'GET':
-        ratings_info = viewAgentRatingController().viewAgentRating()
-        reviews_info = viewAgentReviewController().viewAgentReview()
-
-        print(ratings_info)
-        print(reviews_info)
+        ratings_info = viewAgentRatingController().getAllAgentRating()
+        reviews_info = viewAgentReviewController().getAllAgentReview()
 
         if not ratings_info and not reviews_info:
             return render_template('Buyer/viewAgentRR.html', message="No Feedback Found", current_page='view_rr')
