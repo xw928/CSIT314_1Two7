@@ -49,8 +49,8 @@ def display_buyer_submit_feedback():
         buyer_rating = request.form["rating"]
         buyer_review = request.form["review"]
 
-        submitRating = buyerSubmitRatingController().submitBuyerRating(agent_username, buyer_username, buyer_rating)
-        submitReview = buyerSubmitReviewController().submitBuyerReview(agent_username, buyer_username, buyer_review)
+        submitRating = buyerSubmitRatingController().submitRating(agent_username, buyer_username, buyer_rating)
+        submitReview = buyerSubmitReviewController().submitReview(agent_username, buyer_username, buyer_review)
 
 
         if submitRating and submitReview:
