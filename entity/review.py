@@ -40,6 +40,27 @@ class review():
             connection.close()
 
 
+    def getAllAgentReview(self):
+        connection = self.getDBConnection()
+        try:
+            with connection.cursor() as cursor:
+                sql = """
+                SELECT Ua.username AS agent_username, Rv.review
+                FROM Review Rv
+                JOIN User_Account Ua ON Rv.receiver_id = Ua.user_id
+                WHERE Ua.profile_id = 2
+                """
+                cursor.execute(sql)
+                reviews_info = cursor.fetchall()
+                return reviews_info
+
+        except Exception as e:
+            print(f"Error occurred: {e}")
+            return False
+        finally:
+            connection.close()
+
+
     def submitReview(self, agent_username, sender_username, review):
         connection = self.getDBConnection()
         try:
