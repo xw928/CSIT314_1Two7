@@ -1,0 +1,142 @@
+{% extends "Seller/sellerFrame.html" %}
+
+{% block style %}
+
+.para {
+    margin-top: 7%; 
+    color: black;
+    text-align: center;
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: bold;
+    font-size: 30px;
+    margin-bottom:30px;
+}
+
+.container {
+    display: flex;
+    justify-content: left;
+    align-items: left;
+    flex-wrap: wrap;
+    margin: 0px 80px;
+}
+
+.box {
+    margin:30px;
+    width: 260px;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    padding: 10px 30px;
+    box-shadow: 0px 1px 5px rgba(192, 192, 192, 0.5);
+}
+
+.box:hover {
+    background-color: rgba(222, 220, 255, 0.15);
+}
+
+.price {
+    font-size: 20px;
+    font-weight: 600;
+    color: rgb(47, 39, 206);
+}
+
+.price span {
+    display: inline-block;
+}
+
+.icon-text {
+    font-family: 'Times New Roman', Times, serif;
+    display: inline-flex;
+    align-items: center; 
+    gap: 13px; 
+    margin: 0; 
+    font-size: 1.2rem;
+    font-weight: bold; 
+    color: #000;
+}
+
+.icon-text img {
+    height: 25px;
+}
+
+.update-button,
+.delete-button {
+    margin-top:2%;
+    width: 40%;
+    padding: 8px 12px;
+    background: rgb(30, 30, 148);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    margin-bottom:8px;
+}
+
+.update-button {
+    margin-left: 3px;
+    margin-right: 40px;
+}
+
+
+.update-button:hover,
+.delete-button:hover {
+    background: #000;
+}
+
+.message {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.75rem 1.25rem;
+    border-radius: 9999px;
+    font-size: 1rem;
+    font-weight: 500;
+    text-align: center;
+    background-color: #FDE8E8;
+    color: #9B1C1C;
+}
+
+{% endblock style %}
+
+{% block content %}
+
+<div class="para">
+    <p style="margin-bottom: 10px;">Your Used Car Listings</p>
+</div>
+
+<section class="container">
+    {% if message %}
+        <p class="message">
+            {{ message }}
+        </p>
+    {% endif %}
+    {% for car in cars_info %}
+    <div class="box">
+        <p class="price">
+            {% if car.car_status == 0 %}
+                <span style="text-decoration: line-through red;">${{ car.price }}</span>
+                <span style="color: red; margin-left: 10px;">  Sold</span>
+            {% else %}
+                ${{ car.price }}
+            {% endif %}
+        </p>
+        <p class="icon-text" style="margin: 0px;"><img src="{{ url_for('static', filename='car.png') }}" alt="car">{{ car.brand }} {{ car.model }}</p>
+        <p>Car ID: {{ car.car_id }}</p>
+        <p>Car Type: {{ car.car_type }}</p>
+        <p>Year: {{ car.year }}</p>
+        <p>Fuel Type: {{ car.fuel_type }}</p>
+        <p>Mileage: {{ car.mileage }}</p>
+        <p>Transmission: {{ car.transmission }}</p>
+        <p>Engine Size: {{ car.engine_size }}L</p>
+        <p>Description: {{ car.description }}</p>
+        <p>View: {{ car.view }}</p>
+        <p>Shortlisted: {{ car.shortlisted }}</p>
+        <p>Agent Username: {{ car.username }}</p>
+    </div>
+    {% endfor %}
+</section>
+
+<div><br><br><br><br></div>
+
+{% endblock content %}

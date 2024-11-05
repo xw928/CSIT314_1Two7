@@ -44,38 +44,45 @@ class usedCarList():
             connection.close()
 
 
-
-    def viewUsedCarList(self, agent_username):
+    # for agent and seller
+    def viewUsedCarList(self, username):
         connection = self.getDBConnection()
         try:
             with connection.cursor() as cursor:
-                cursor.execute("SELECT user_id FROM User_Account WHERE username = %s", (agent_username,))
-                agent_data = cursor.fetchone()
-                
-                if agent_data:
-                    agent_id = agent_data['user_id']
+                cursor.execute("SELECT user_id, profile_id FROM User_Account WHERE username = %s", (username,))
+                user_data = cursor.fetchone()
+                print(user_data)
+
+                sql = ''
+
+                if user_data['profile_id'] == 4:
+
                     sql = """
-                    SELECT 
-                        ucl.*, 
-                        agent.username AS agent_username, 
-                        seller.username AS seller_username
-                    FROM 
-                        Used_Car_List ucl
-                    JOIN 
-                        User_Account agent ON ucl.agent_id = agent.user_id
-                    JOIN 
-                        User_Account seller ON ucl.seller_id = seller.user_id
-                    WHERE 
-                        ucl.agent_id = %s
-                    ORDER BY 
-                        ucl.car_id;
+                        SELECT ucl.*, ua.username AS agent_username
+                        FROM Used_Car_List ucl
+                        INNER JOIN User_Account ua 
+                        ON ua.user_id = ucl.agent_id
+                        WHERE seller_id = %s
+                        ORDER BY ucl.car_id
                     """
-                    cursor.execute(sql, (agent_id,))
-                    car_info = cursor.fetchall()
-                    return car_info
+                
+                elif user_data['profile_id'] == 2:
+
+                    sql = """
+                        SELECT ucl.*, ua.username AS seller_username
+                        FROM Used_Car_List ucl
+                        INNER JOIN User_Account ua 
+                        ON ua.user_id = ucl.seller_id
+                        WHERE agent_id = %s
+                        ORDER BY ucl.car_id
+                    """
                 else:
-                    print("Error: Agent username not found.")
+                    print("Error: Username not found.")
                     return None
+            
+                cursor.execute(sql, (user_data['user_id'],))
+                car_info = cursor.fetchall()
+                return car_info
 
         except Exception as e:
             print(f"Error occurred: {e}")
@@ -163,6 +170,7 @@ class usedCarList():
             connection.close()
 
 
+    # for agent search
     def searchUsedCarList(self, agent_username, field, value):
         connection = self.getDBConnection()
         try:
@@ -178,7 +186,7 @@ class usedCarList():
                         sql = """
                         SELECT 
                             ucl.car_id, ucl.car_type, ucl.year, ucl.brand, ucl.model, ucl.price,
-                            ucl.fuel_type, ucl.mileage, ucl.transmission, ucl.engine_size, 
+                            ucl.fuel_type, ucl.mileage, ucl.transmission, ucl.engine_size, ucl.car_status,
                             ucl.description, ucl.view, ucl.shortlisted, ua.username AS seller_username
                         FROM 
                             Used_Car_List ucl
@@ -193,7 +201,7 @@ class usedCarList():
                         sql = """
                         SELECT 
                             ucl.car_id, ucl.car_type, ucl.year, ucl.brand, ucl.model, ucl.price,
-                            ucl.fuel_type, ucl.mileage, ucl.transmission, ucl.engine_size, 
+                            ucl.fuel_type, ucl.mileage, ucl.transmission, ucl.engine_size, ucl.car_status,
                             ucl.description, ucl.view, ucl.shortlisted, ua.username AS seller_username
                         FROM 
                             Used_Car_List ucl
@@ -208,7 +216,7 @@ class usedCarList():
                         sql = f"""
                         SELECT 
                             ucl.car_id, ucl.car_type, ucl.year, ucl.brand, ucl.model, ucl.price,
-                            ucl.fuel_type, ucl.mileage, ucl.transmission, ucl.engine_size, 
+                            ucl.fuel_type, ucl.mileage, ucl.transmission, ucl.engine_size, ucl.car_status,
                             ucl.description, ucl.view, ucl.shortlisted, ua.username AS seller_username
                         FROM 
                             Used_Car_List ucl
@@ -233,7 +241,7 @@ class usedCarList():
             return False
         finally:
             connection.close()
-
+            
     def searchBuyerUsedCarList(self, buyer_username, field, value):
         connection = self.getDBConnection()
         try:
@@ -290,6 +298,72 @@ class usedCarList():
                 cars_info = cursor.fetchall()
 
                 return cars_info
+
+
+    # seller search
+    def searchSellerUsedCarList(self,seller_username, field, value):
+        connection = self.getDBConnection()
+        try:
+            with connection.cursor() as cursor:
+                cursor.execute("SELECT user_id FROM User_Account WHERE username = %s", (seller_username,))
+                seller_data = cursor.fetchone()
+                
+                if seller_data:
+                    seller_id = seller_data['user_id']
+                    sql = ""
+                    if field == 'price':
+                        sql = """
+                        SELECT 
+                            ucl.car_id, ucl.car_type, ucl.year, ucl.brand, ucl.model, ucl.price,
+                            ucl.fuel_type, ucl.mileage, ucl.transmission, ucl.engine_size, ucl.car_status,
+                            ucl.description, ucl.view, ucl.shortlisted, ua.username AS agent_username
+                        FROM 
+                            Used_Car_List ucl
+                        INNER JOIN 
+                            User_Account ua ON ucl.agent_id = ua.user_id
+                        WHERE 
+                            ucl.seller_id = %s AND ucl.price <= %s
+                        ORDER BY 
+                            ucl.car_id;
+                        """
+                    elif field == 'seller_username':
+                        sql = """
+                        SELECT 
+                            ucl.car_id, ucl.car_type, ucl.year, ucl.brand, ucl.model, ucl.price,
+                            ucl.fuel_type, ucl.mileage, ucl.transmission, ucl.engine_size, ucl.car_status,
+                            ucl.description, ucl.view, ucl.shortlisted, ua.username AS agent_username
+                        FROM 
+                            Used_Car_List ucl
+                        INNER JOIN 
+                            User_Account ua ON ucl.agent_id = ua.user_id
+                        WHERE 
+                            ucl.seller_id = %s AND ua.username = %s
+                        ORDER BY 
+                            ucl.car_id;
+                        """
+                    else:
+                        sql = f"""
+                        SELECT 
+                            ucl.car_id, ucl.car_type, ucl.year, ucl.brand, ucl.model, ucl.price,
+                            ucl.fuel_type, ucl.mileage, ucl.transmission, ucl.engine_size, ucl.car_status,
+                            ucl.description, ucl.view, ucl.shortlisted, ua.username AS agent_username
+                        FROM 
+                            Used_Car_List ucl
+                        INNER JOIN 
+                            User_Account ua ON ucl.agent_id = ua.user_id
+                        WHERE 
+                            ucl.seller_id = %s AND {field} = %s
+                        ORDER BY 
+                            ucl.car_id;
+                        """
+                    
+                    cursor.execute(sql, (seller_id, value))
+                    cars_info = cursor.fetchall()
+                    return cars_info
+                else:
+                    print("Error: Seller Username not found.")
+                    return None
+            
 
         except Exception as e:
             print(f"Error occurred: {e}")

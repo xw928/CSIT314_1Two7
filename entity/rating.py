@@ -40,6 +40,28 @@ class rating():
             connection.close()
 
 
+    def getAllAgentRating(self):
+        connection = self.getDBConnection()
+        try:
+            with connection.cursor() as cursor:
+                sql = """
+                SELECT Ua.username AS agent_username, Rt.rating
+                FROM Rating Rt
+                JOIN User_Account Ua ON Rt.receiver_id = Ua.user_id
+                WHERE Ua.profile_id = 2
+                """
+                cursor.execute(sql)
+                ratings_info = cursor.fetchall()
+                print(ratings_info)
+                return ratings_info
+
+        except Exception as e:
+            print(f"Error occurred: {e}")
+            return False
+        finally:
+            connection.close()
+
+
     def submitRating(self, agent_username, sender_username, rating):
         connection = self.getDBConnection()
         try:
