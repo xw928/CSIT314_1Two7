@@ -1,0 +1,217 @@
+{% extends "Buyer/buyerFrame.html" %}
+
+{% block style %}
+
+.para {
+    margin-top: 8%; 
+    color: black;
+    text-align: center;
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: bold;
+    font-size: 32px;
+    margin-bottom: 2%;
+}
+
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    margin: 0px 80px;
+}
+
+.top-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin: 30px auto;
+    max-width: 1200px;
+    padding: 0 20px;
+    gap: 20px;
+    flex-wrap: wrap;
+    margin-bottom:0px;
+  }
+
+.box {
+    margin:20px;
+    width: 350px;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    padding: 10px 30px;
+    box-shadow: 0px 1px 5px rgba(192, 192, 192, 0.5);
+}
+
+.shortlist-button {
+    margin-left: 3px;
+    margin-right: 40px;
+}
+
+.message {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.75rem 1.25rem;
+    border-radius: 9999px;
+    font-size: 1rem;
+    font-weight: 500;
+    text-align: center;
+    background-color: #FDE8E8;
+    color: #9B1C1C;
+}
+
+form {
+    width: 100%;
+}
+
+form div {
+    width: 100%;
+    margin-bottom: 25px;
+}
+
+label {
+    display: block;
+    color: rgb(71, 71, 71);
+    font-size: 18px;
+    margin-bottom: 2px;
+    font-weight: 500;
+    margin-bottom:10px;
+}
+
+.form-group input {
+    width: 94.5%;
+    padding: 12px;
+    border: 1.5px solid #ddd;
+    border-radius: 6px;
+    font-size: 16px;
+    transition: border-color 0.2s;
+    margin-bottom:12px;
+} 
+
+.form-group select {
+    width: 100%;
+    padding: 12px;
+    border: 1.5px solid #ddd;
+    border-radius: 6px;
+    font-size: 16px;
+    transition: border-color 0.2s;
+    margin-bottom:12px;
+}
+
+.form-group textarea {
+    width: 94.5%;             
+    height: 132px;           
+    padding: 12px;           
+    border: 1.5px solid #ddd; 
+    border-radius: 6px;     
+    font-size: 16px;        
+    resize: vertical;        
+    transition: border-color 0.2s; 
+    margin-bottom:12px;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: rgba(68, 61, 255, 0.5);
+    border-width: 1.5px;
+}
+
+.form-group input:hover,
+.form-group select:hover {
+    border-color: rgba(68, 61, 255, 0.5);
+    border-width: 1.5px;
+    background-color: rgba(222, 220, 255, 0.1); 
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); 
+}
+
+.button {
+    width: 100%;
+    padding: 12px;
+    background: #000;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    margin-bottom: 15px;
+}
+
+.button:hover {
+    background: #333;
+}
+
+{% endblock style %}
+
+{% block content %}
+
+<div class="para">
+    <p style="margin-bottom: 10px;">Used Car Loan Calculator</p>
+</div>
+
+<section class="container">
+
+<div class="box">
+    <form id="loanForm">
+        <br>
+        <div class="form-group">
+            <label for="price">Car Price:</label>
+            <input type="number" id="price" name="price" step="0.01" required>
+        </div>
+        <div class="form-group">
+            <label for="interest">Interest Rate:</label>
+            <input type="number" id="interest" name="interest" step="0.01" required>
+        </div>
+        <div class="form-group">
+            <label for="term of loan">Loan Term:</label>
+            <input type="number" id="term of loan" name="term of loan" required>
+        </div>
+        <div class="form-group">
+            <label for="downpayment">Downpayment Percentage:</label>
+            <input type="number" id="downpayment" name="downpayment" required>
+        </div>
+        <button class="button" type="submit" value="Calculate"> Calculate </button>
+    </form>
+</div>
+
+<div class="box">
+    <h3>Monthly Payment:   $<span id="monthlyPayment"></span></h3>
+</div>
+
+</section>
+
+<script>
+    // Function to calculate the monthly payment
+    function calculateLoan() {
+        // Get input values
+        const price = parseFloat(document.getElementById("Price").value);
+        const interest = parseFloat(document.getElementById("Interest").value) / 100; // Convert percentage to decimal
+        const term = parseInt(document.getElementById("Term").value);
+        const downpayment = parseInt(document.getElementById("Downpayment").value) / 100; 
+
+        // Check if all inputs are valid
+        if (isNaN(price) || isNaN(interest) || isNaN(term) || isNaN(downpayment) || price <= 0 || interest <= 0 || term <= 0 || downpayment <=0) {
+            alert("Please enter valid values for all fields.");
+            return;
+        }
+
+        // Calculate monthly payment using the loan payment formula
+        const numMonths = term * 12;
+        const loanAmount = price - (price * downpayment);
+        const totalInterest = loanAmount * interest * (term / 100)
+        const monthlyPayment = (loanAmount + totalInterest) / numMonths;
+
+        // Display the result
+        document.getElementById("monthlyPayment").textContent = "$" + monthlyPayment.toFixed(2);
+    }
+
+    // Handle form submission
+    document.getElementById("loanForm").addEventListener("submit", function(event) {
+        event.preventDefault(); // Prevent the form from submitting
+        calculateLoan();
+    });
+
+</script>
+
+{% endblock content %}

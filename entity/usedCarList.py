@@ -6,7 +6,7 @@ class usedCarList():
         config = {
             'host': 'localhost',
             'user': 'root',
-            'password': 'Kxw92803',
+            'password': '1234',
             'database': 'used_car_app',
             'cursorclass': pymysql.cursors.DictCursor
         }
@@ -377,3 +377,77 @@ class usedCarList():
             return False
         finally:
             connection.close()
+
+    def getAvailableUsedCarList(self):
+        connection = self.getDBConnection()
+        try:
+            with connection.cursor() as cursor:
+
+                sql = """
+                    SELECT ucl.*, ua.username AS agent_username
+                    FROM Used_Car_List ucl
+                    INNER JOIN User_Account ua 
+                    ON ua.user_id = ucl.agent_id
+                    ORDER BY ucl.car_id
+                """
+            
+                cursor.execute(sql)
+                cars_info = cursor.fetchall()
+                return cars_info
+
+        except Exception as e:
+            print(f"Error occurred: {e}")
+            return False
+        finally:
+            connection.close()
+
+    def getAvailableUsedCarList(self):
+        connection = self.getDBConnection()
+        try:
+            with connection.cursor() as cursor:
+
+                sql = """
+                    SELECT ucl.*, ua.username AS agent_username
+                    FROM Used_Car_List ucl
+                    INNER JOIN User_Account ua 
+                    ON ua.user_id = ucl.agent_id
+                    ORDER BY ucl.car_id
+                """
+
+                cursor.execute(sql)
+                cars_info = cursor.fetchall()
+                return cars_info
+
+        except Exception as e:
+            print(f"Error occurred: {e}")
+            return False
+        finally:
+            connection.close()
+
+    def updateUsedCarView(self, car_id):
+        connection = self.getDBConnection()
+        try:
+            with connection.cursor() as cursor:
+                sql = """
+                UPDATE Used_Car_list
+                SET view = view + 1
+                WHERE car_id = %s
+                """
+                cursor.execute(sql, (car_id,))
+                connection.commit()
+
+            if cursor.rowcount > 0:
+                print("Update successful.")
+                return True
+
+        except Exception as e:
+            print(f"Error occurred: {e}")
+            return False
+        finally:
+            connection.close()
+
+    # for buyer seach available used car
+    def getBuyerShortListedCar(self):
+        connection = self.getDBConnection()
+        
+        connection.close

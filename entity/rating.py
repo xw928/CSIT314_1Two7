@@ -6,7 +6,7 @@ class rating():
         config = {
             'host': 'localhost',
             'user': 'root',
-            'password': 'Kxw92803',
+            'password': '1234',
             'database': 'used_car_app',
             'cursorclass': pymysql.cursors.DictCursor
         }
