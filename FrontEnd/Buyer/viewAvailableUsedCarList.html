@@ -58,9 +58,7 @@
     height: 25px;
 }
 
-.search-button,
-.update-button,
-.delete-button {
+.view-button {
     margin-top:2%;
     width: 40%;
     padding: 8px 12px;
@@ -74,14 +72,13 @@
     margin-bottom:8px;
 }
 
-.update-button {
+.view-button {
     margin-left: 3px;
     margin-right: 40px;
 }
 
-.search-button,
-.update-button:hover,
-.delete-button:hover {
+
+.view-button:hover{
     background: #000;
 }
 
@@ -102,8 +99,7 @@
 {% block content %}
 
 <div class="para">
-    <p style="margin-bottom: 10px;">Your ShortListed Cars</p>
-    <!-- <button class="search-button" onclick="window.location.href='/search_sl'">Search Shortlist</button> -->
+    <p style="margin-bottom: 10px;">All Used Car Listings</p>
 </div>
 
 <section class="container">
@@ -114,26 +110,13 @@
     {% endif %}
     {% for car in cars_info %}
     <div class="box">
-        <p class="price">
-            {% if car.car_status == 0 %}
-                <span style="text-decoration: line-through red;">${{ car.price }}</span>
-                <span style="color: red; margin-left: 10px;">  Sold</span>
-            {% else %}
-                ${{ car.price }}
-            {% endif %}
-        </p>
+        <p class="price">${{ car.price }}</p>
         <p class="icon-text" style="margin: 0px;"><img src="{{ url_for('static', filename='car.png') }}" alt="car">{{ car.brand }} {{ car.model }}</p>
-        <p>Car ID: {{ car.car_id }}</p>
         <p>Car Type: {{ car.car_type }}</p>
-        <p>Year: {{ car.year }}</p>
-        <p>Fuel Type: {{ car.fuel_type }}</p>
-        <p>Mileage: {{ car.mileage }}</p>
-        <p>Transmission: {{ car.transmission }}</p>
-        <p>Engine Size: {{ car.engine_size }}L</p>
-        <p>Description: {{ car.description }}</p>
-        <p>View: {{ car.view }}</p>
-        <p>Shortlisted: {{ car.shortlisted }}</p>
         <p>Agent Username: {{ car.agent_username }}</p>
+        <div>
+            <button class="view-button" onclick="window.location.href='/buyer_cd?car_id={{ car.car_id }}'">View Details</button>
+        </div>
     </div>
     {% endfor %}
 </section>

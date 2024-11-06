@@ -1,0 +1,153 @@
+{% extends "Buyer/buyerFrame.html" %}
+
+{% block style %}
+
+.para {
+    margin-top: 6%; 
+    color: black;
+    text-align: center;
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: bold;
+    font-size: 30px;
+    margin-bottom: 0px;
+}
+
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    margin: 0px 80px;
+}
+
+.box {
+    margin:20px;
+    width: 300px;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    padding: 10px 30px;
+    box-shadow: 0px 1px 5px rgba(192, 192, 192, 0.5);
+}
+
+.box:hover {
+    background-color: rgba(222, 220, 255, 0.15);
+}
+
+.price {
+    font-size: 20px;
+    font-weight: 600;
+    color: rgb(47, 39, 206);
+}
+
+.price span {
+    display: inline-block;
+}
+
+.icon-text {
+    font-family: 'Times New Roman', Times, serif;
+    display: inline-flex;
+    align-items: center; 
+    gap: 13px; 
+    margin: 0; 
+    font-size: 1.2rem;
+    font-weight: bold; 
+    color: #000;
+}
+
+.icon-text img {
+    height: 25px;
+}
+
+.button-container {
+    display: flex;  
+    justify-content: space-between;
+    gap: 5px;           
+}
+
+.back-button,
+.shortlist-button {
+    margin-top:2%;
+    width: 40%;
+    padding: 8px 12px;
+    background: rgb(30, 30, 148);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    margin-bottom:8px;
+}
+
+.shortlist-button {
+    margin-left: 0px;
+    margin-right: 135px;
+}
+
+
+.back-button:hover,
+.shortlist-button:hover {
+    background: #000;
+}
+
+.message {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.75rem 1.25rem;
+    border-radius: 9999px;
+    font-size: 1rem;
+    font-weight: 500;
+    text-align: center;
+}
+
+.message-success {
+    background-color: #DEF7EC;
+    color: #03543F;
+}
+
+.message-error {
+    background-color: #FDE8E8;
+    color: #9B1C1C;
+}
+
+
+{% endblock style %}
+
+{% block content %}
+
+<div class="para">
+    <p style="margin-bottom: 10px;">Car Detail</p>
+</div>
+
+<section class="container">
+    {% if message %}
+        <p class="message {% if message_type == 'success' %}message-success{% elif message_type == 'error' %}message-error{% endif %}">
+            {{ message }}
+        </p>
+    {% endif %}
+    <div class="box">
+        <p class="price">${{ car_info.price }}</p>
+        <p class="icon-text" style="margin: 0px;"><img src="{{ url_for('static', filename='car.png') }}" alt="car">{{ car_info.brand }} {{ car_info.model }}</p>
+        <p>Car ID: {{ car_info.car_id }}</p>
+        <p>Car Type: {{ car_info.car_type }}</p>
+        <p>Year: {{ car_info.year }}</p>
+        <p>Fuel Type: {{ car_info.fuel_type }}</p>
+        <p>Mileage: {{ car_info.mileage }}</p>
+        <p>Transmission: {{ car_info.transmission }}</p>
+        <p>Engine Size: {{ car_info.engine_size }}L</p>
+        <p>Description: {{ car_info.description }}</p>
+        <p>View: {{ car_info.view }}</p>
+        <p>Shortlisted: {{ car_info.shortlisted }}</p>
+        <p>Agent Username: {{ car_info.agent_username }}</p>
+        <section class="button-container">
+            <form method="POST" action="{{ url_for('buyer_blueprint.addBuyerShortList') }}">
+                <input type="hidden" name="car_id" value="{{ car_info.car_id }}">
+                <button class="shortlist-button" type="submit">Shortlist</button>
+            </form>
+            <button class="back-button" onclick="window.location.href='/buyer_ucl'">Back</button>
+        </section>
+    </div>
+</section>
+
+{% endblock content %}
