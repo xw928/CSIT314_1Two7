@@ -143,39 +143,50 @@ def displayViewAgentRR():
 def addBuyerShortList():
     car_id = request.form.get('car_id')  # Get the car_id from the form data (passed by the button)
     buyer_username = session.get('username')  # Get the buyer_username from the session (assuming it's stored)
+    
     # Call the method to add the car to the shortlist
     is_added = addToBuyerShortListController().addBuyerShortList(buyer_username, car_id)
-    # Fetch the car details after adding to the shortlist
+    
+    # Fetch the car details after attempting to add to the shortlist
     cars_info = session.get('cars_info')
     car_info = next((car for car in cars_info if car["car_id"] == int(car_id)), None)
 
     if is_added:
         car_info['shortlisted'] += 1
-        session['cars_info'] = cars_info 
+        session['cars_info'] = cars_info
         message = "Car has been successfully shortlisted!"
         message_type = "success"
-        return render_template('Buyer/viewCarDetail.html', message=message, message_type=message_type, car_info=car_info)
-    
     else:
-        message = "Car is already shortlisted!"
+        message = "Car has already been shortlisted!"
         message_type = "error"
-        return render_template('Buyer/viewCarDetail.html', message=message, message_type=message_type, car_info=car_info)
-
-# @buyer_blueprint.route('/search_sl', methods=['GET', 'POST'])
-# def searchBuyerShortList():
-
-#     if request.method == 'POST':
-#         field = request.form.get('field')
-#         value = request.form.get('target')
-#         buyer_username = request.form.get('buyer_username')  # Get the buyer's username from the form
-
-#         cars_info = searchBuyerShortListController().searchBuyerShortList(field, value, buyer_username)
-#         if cars_info:
-#             return render_template('Buyer/searchList.html', cars_info=cars_info)
-#         else:
-#             message = "Used Car Listing Not Found..."
-#             return render_template('Buyer/searchList.html', user_info=[], message=message)
     
-#     return render_template('Buyer/searchList.html')
+    # Return to the view with the appropriate message
+    return render_template('Buyer/viewCarDetail.html', message=message, message_type=message_type, car_info=car_info)
+
+@buyer_blueprint.route('/search_sl', methods=['GET', 'POST'])
+def searchBuyerShortList():
+    # Ensure the buyer's username is pulled from the session
+    buyer_username = session.get('buyer_username')
+
+    if request.method == 'POST':
+        field = request.form.get('field')
+        value = request.form.get('target')
+
+        # Check if the 'field' and 'value' are provided
+        if not field or not value:
+            message = "Please provide both a search field and a value."
+            return render_template('Buyer/searchShortList.html', message=message)
+
+        # Pass the session's buyer_username to the entity function
+        cars_info = searchBuyerShortListController().searchBuyerShortList(field, value, buyer_username)
+        
+        # Check if cars_info is empty and display appropriate message
+        if cars_info:
+            return render_template('Buyer/searchShortList.html', cars_info=cars_info)
+        else:
+            message = "No cars match your criteria in the shortlist."
+            return render_template('Buyer/searchShortList.html', cars_info=[], message=message)
+    
+    return render_template('Buyer/searchShortList.html')
 
 

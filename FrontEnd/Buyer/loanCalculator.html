@@ -176,41 +176,50 @@ label {
 </div>
 
 <div class="box">
-    <h3>Monthly Payment:   $<span id="monthlyPayment"></span></h3>
+    <h3>Monthly Payment:   <span id="monthlyPayment"></span></h3>
 </div>
 
 </section>
 
 <script>
-    // Function to calculate the monthly payment
-    function calculateLoan() {
-        // Get input values
-        const price = parseFloat(document.getElementById("Price").value);
-        const interest = parseFloat(document.getElementById("Interest").value) / 100; // Convert percentage to decimal
-        const term = parseInt(document.getElementById("Term").value);
-        const downpayment = parseInt(document.getElementById("Downpayment").value) / 100; 
+function calculateLoan() {
+    // Get input values
+    const price = parseFloat(document.getElementById("price").value); // Correct ID 'price'
+    const interestRate = parseFloat(document.getElementById("interest").value) / 100; // Correct ID 'interest'
+    const term = parseInt(document.getElementById("term of loan").value); // Correct ID 'term of loan'
+    const downpaymentPercentage = parseInt(document.getElementById("downpayment").value) / 100; // Correct ID 'downpayment'
 
-        // Check if all inputs are valid
-        if (isNaN(price) || isNaN(interest) || isNaN(term) || isNaN(downpayment) || price <= 0 || interest <= 0 || term <= 0 || downpayment <=0) {
-            alert("Please enter valid values for all fields.");
-            return;
-        }
-
-        // Calculate monthly payment using the loan payment formula
-        const numMonths = term * 12;
-        const loanAmount = price - (price * downpayment);
-        const totalInterest = loanAmount * interest * (term / 100)
-        const monthlyPayment = (loanAmount + totalInterest) / numMonths;
-
-        // Display the result
-        document.getElementById("monthlyPayment").textContent = "$" + monthlyPayment.toFixed(2);
+    // Check if all inputs are valid
+    if (isNaN(price) || isNaN(interestRate) || isNaN(term) || isNaN(downpaymentPercentage) || price <= 0 || interestRate <= 0 || term <= 0 || downpaymentPercentage < 0) {
+        alert("Please enter valid values for all fields.");
+        return;
     }
 
-    // Handle form submission
-    document.getElementById("loanForm").addEventListener("submit", function(event) {
-        event.preventDefault(); // Prevent the form from submitting
-        calculateLoan();
-    });
+    // Calculate the loan amount after downpayment
+    const loanAmount = price - (price * downpaymentPercentage);
+
+    // Convert the annual interest rate to a monthly interest rate
+    const monthlyInterestRate = interestRate / 12;
+
+    // Total number of payments (months)
+    const numMonths = term * 12;
+
+    // If the interest rate is zero, simply divide the loan by the number of months
+    let monthlyPayment;
+    if (monthlyInterestRate === 0) {
+        monthlyPayment = loanAmount / numMonths;
+    } else {
+        // Monthly payment formula (fixed-rate loan)
+        monthlyPayment = (loanAmount * monthlyInterestRate) / (1 - Math.pow(1 + monthlyInterestRate, -numMonths));
+    }
+
+    document.getElementById("monthlyPayment").textContent = "$" + monthlyPayment.toFixed(2);
+}
+
+document.getElementById("loanForm").addEventListener("submit", function(event) {
+    event.preventDefault(); // Prevent the form from submitting
+    calculateLoan();
+});
 
 </script>
 

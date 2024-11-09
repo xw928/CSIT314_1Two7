@@ -12,14 +12,16 @@ class buyerShortList():
         }
         return pymysql.connect(**config)
     
+    import pymysql
+
     def addBuyerShortList(self, buyer_username, car_id):
         try:
             # Establish DB connection
             with self.getDBConnection() as connection:
                 with connection.cursor() as cursor:
-                    # Insert into the Buyer_Shortlist table
+                    # Try inserting the car into the Buyer_Shortlist table
                     insert_sql = """
-                        INSERT INTO buyer_shortlist (buyer_username, car_id)
+                        INSERT INTO Buyer_Shortlist (buyer_username, car_id)
                         VALUES (%s, %s)
                     """
                     cursor.execute(insert_sql, (buyer_username, car_id))
@@ -39,14 +41,21 @@ class buyerShortList():
                     if cursor.rowcount > 0:
                         print("Buyer successfully added to the shortlist and car shortlisted.")
                         return True
+                    return False
 
-            return False
-
+        except pymysql.err.IntegrityError as e:
+            # Check if the error is due to a duplicate entry for the combination of buyer_username and car_id
+            if "Duplicate entry" in str(e) and "for key" in str(e):
+                print(f"Error: Car {car_id} is already shortlisted by buyer {buyer_username}.")
+                return False
+            else:
+                # Raise any other types of IntegrityErrors or exceptions
+                raise
         except Exception as e:
-            # If there is an error, print it and return False
-            print(f"Error adding to shortlist: {e}")
-            return False
-        
+            # Catch all other exceptions
+            print(f"Unexpected error: {e}")
+            raise
+
     def viewShortListedCar(self, buyer_username):
         connection = self.getDBConnection()
         try:
@@ -87,83 +96,66 @@ class buyerShortList():
         finally:
             connection.close()
 
-# def searchBuyerShortList(self, field, value, buyer_username): 
-#     connection = self.getDBConnection()
-#     try:
-#         with connection.cursor() as cursor:
-#             # First, get the car_ids from the buyer's shortlist
-#             shortlist_sql = """
-#             SELECT car_id 
-#             FROM buyer_shortlist 
-#             WHERE buyer_username = %s
-#             """
-#             cursor.execute(shortlist_sql, (buyer_username,))
-#             shortlisted_car_ids = [row[0] for row in cursor.fetchall()]  # Get all the car_ids
+    def searchBuyerShortList(self, field, value, buyer_username):
+        connection = self.getDBConnection()
+        try:
+            with connection.cursor() as cursor:
+                # Get shortlisted cars for the given buyer (ensure buyer_username is in session)
+                shortlist_sql = """
+                SELECT car_id
+                FROM buyer_shortlist
+                WHERE buyer_username = %s
+                """
+                cursor.execute(shortlist_sql, (buyer_username,))
+                shortlisted_car_ids = [row[0] for row in cursor.fetchall()]
 
-#             if not shortlisted_car_ids:
-#                 return []  # If no cars are in the shortlist for this buyer
+                if not shortlisted_car_ids:
+                    return []  # No cars in the shortlist for this buyer
 
-#             # Now, use the shortlisted car ids to fetch the details from Used_Car_List
-#             sql = ""
-#             if field == 'price':
-#                 sql = """
-#                 SELECT 
-#                     ucl.car_id, ucl.car_type, ucl.year, ucl.brand, ucl.model, ucl.price,
-#                     ucl.fuel_type, ucl.mileage, ucl.transmission, ucl.engine_size, 
-#                     ucl.description, ucl.view, ucl.shortlisted, ua.username AS agent_username
-#                 FROM 
-#                     Used_Car_List ucl
-#                 INNER JOIN 
-#                     User_Account ua ON ucl.agent_id = ua.user_id
-#                 WHERE
-#                     ucl.car_id IN (%s) AND ucl.price <= %s AND ucl.car_status = 1
-#                 ORDER BY 
-#                     ucl.car_id;
-#                 """
-#                 # You need to pass the list of shortlisted car IDs and the price
-#                 cursor.execute(sql, (', '.join(map(str, shortlisted_car_ids)), value))
-#             elif field == 'agent_username':
-#                 sql = """
-#                 SELECT 
-#                     ucl.car_id, ucl.car_type, ucl.year, ucl.brand, ucl.model, ucl.price,
-#                     ucl.fuel_type, ucl.mileage, ucl.transmission, ucl.engine_size, 
-#                     ucl.description, ucl.view, ucl.shortlisted, ua.username AS agent_username
-#                 FROM 
-#                     Used_Car_List ucl
-#                 INNER JOIN 
-#                     User_Account ua ON ucl.agent_id = ua.user_id
-#                 WHERE 
-#                     ucl.car_id IN (%s) AND ua.username = %s AND ucl.car_status = 1
-#                 ORDER BY 
-#                     ucl.car_id;
-#                 """
-#                 cursor.execute(sql, (', '.join(map(str, shortlisted_car_ids)), value))
-#             else:
-#                 sql = f"""
-#                 SELECT 
-#                     ucl.car_id, ucl.car_type, ucl.year, ucl.brand, ucl.model, ucl.price,
-#                     ucl.fuel_type, ucl.mileage, ucl.transmission, ucl.engine_size, 
-#                     ucl.description, ucl.view, ucl.shortlisted, ua.username AS agent_username
-#                 FROM 
-#                     Used_Car_List ucl
-#                 INNER JOIN 
-#                     User_Account ua ON ucl.agent_id = ua.user_id
-#                 WHERE 
-#                     ucl.car_id IN (%s) AND {field} = %s AND ucl.car_status = 1
-#                 ORDER BY 
-#                     ucl.car_id;
-#                 """
-#                 cursor.execute(sql, (', '.join(map(str, shortlisted_car_ids)), value))
+                # Ensure that shortlisted_car_ids are available and valid
+                shortlisted_car_ids_str = ', '.join(map(str, shortlisted_car_ids))
 
-#             # Fetch and return the results
-#             cars_info = cursor.fetchall()
-#             return cars_info
+                # Construct the base SQL query to search for cars that are in the shortlist and match the criteria
+                sql = f"""
+                SELECT 
+                    ucl.car_id, ucl.car_type, ucl.year, ucl.brand, ucl.model, ucl.price,
+                    ucl.fuel_type, ucl.mileage, ucl.transmission, ucl.engine_size, 
+                    ucl.description, ucl.view, ucl.shortlisted, ua.username AS agent_username
+                FROM 
+                    Used_Car_List ucl
+                INNER JOIN 
+                    User_Account ua ON ucl.agent_id = ua.user_id
+                WHERE
+                    ucl.car_id IN ({shortlisted_car_ids_str})  -- Filter by shortlisted cars only
+                    AND ucl.car_status = 1  -- Ensure the car is active
+                """
 
-#     except Exception as e:
-#         print(f"Error occurred: {e}")
-#         return False
-#     finally:
-#         connection.close()
+                # Apply search filters based on the field (e.g., car_type, brand, price, etc.)
+                if field == 'price':
+                    sql += " AND ucl.price <= %s"
+                    cursor.execute(sql, (value,))
+                elif field == 'agent_username':
+                    sql += " AND LOWER(ua.username) = LOWER(%s)"
+                    cursor.execute(sql, (value.lower(),))
+                elif field in ['car_type', 'brand', 'model']:  # Apply filters for other fields
+                    sql += f" AND LOWER(ucl.{field}) LIKE LOWER(%s)"
+                    cursor.execute(sql, (f"%{value.lower()}%",))
+
+                # Fetch the results
+                cars_info = cursor.fetchall()
+
+                if not cars_info:
+                    return []  # No cars match the criteria
+
+                return cars_info
+
+        except Exception as e:
+            print(f"Error occurred: {e}")
+            return False
+        finally:
+            connection.close()
+
+
 
 
 
