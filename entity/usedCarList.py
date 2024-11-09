@@ -406,11 +406,13 @@ class usedCarList():
         try:
             with connection.cursor() as cursor:
 
+                # Modify the SQL query to filter by car_status
                 sql = """
                     SELECT ucl.*, ua.username AS agent_username
                     FROM Used_Car_List ucl
                     INNER JOIN User_Account ua 
                     ON ua.user_id = ucl.agent_id
+                    WHERE ucl.car_status = 1  -- Only fetch cars that are available
                     ORDER BY ucl.car_id
                 """
 
