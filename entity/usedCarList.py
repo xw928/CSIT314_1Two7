@@ -6,13 +6,14 @@ class usedCarList():
         config = {
             'host': 'localhost',
             'user': 'root',
-            'password': '1234',
+            'password': 'Kxw92803',
             'database': 'used_car_app',
             'cursorclass': pymysql.cursors.DictCursor
         }
         return pymysql.connect(**config)
         
 
+    #40 As a Used Car Agent, I want to create a used car listing so that buyers can view the used car's information.
     def createUsedCarList(self, agent_username, seller_username, car_type, brand, model, year, price, fuel_type, mileage, transmission, engine_size, description):
         connection = self.getDBConnection()
         try:
@@ -44,14 +45,16 @@ class usedCarList():
             connection.close()
 
 
-    # for agent and seller
+    #41 As a Used Car Agent, I want to view used car listings I put up so that I can stay updated on their status.
+    #81 As a Seller, I want to view all my used cars so that I can easily manage and track the used cars I own.
+    #83 As a Seller, I want to track the number of views on my used car so that I can gauge the level of interest from potential buyers
+    #84 As a Seller, I want to track how many times my used cars are shortlisted so that I can know which cars are generating the most interest.
     def viewUsedCarList(self, username):
         connection = self.getDBConnection()
         try:
             with connection.cursor() as cursor:
                 cursor.execute("SELECT user_id, profile_id FROM User_Account WHERE username = %s", (username,))
                 user_data = cursor.fetchone()
-                print(user_data)
 
                 sql = ''
 
@@ -81,8 +84,8 @@ class usedCarList():
                     return None
             
                 cursor.execute(sql, (user_data['user_id'],))
-                car_info = cursor.fetchall()
-                return car_info
+                cars_info = cursor.fetchall()
+                return cars_info
 
         except Exception as e:
             print(f"Error occurred: {e}")
@@ -90,7 +93,8 @@ class usedCarList():
         finally:
             connection.close()
 
-     
+
+    #42 As a Used Car Agent, I want to update used car listings so that the latest used car information is available.
     def updateUsedCarList(self, car_id, new_seller_username, new_car_type, new_brand, new_model, new_year, new_price, new_fuel_type, new_mileage, new_transmission, new_engine_size, new_description, new_status):
         connection = self.getDBConnection()
         try:
@@ -103,7 +107,6 @@ class usedCarList():
                 
                 seller = cursor.fetchone()
                 if not seller:
-                    print("Error: New seller username does not exist or is not a seller (profile_id = 4).")
                     return False
                 
                 new_seller_id = seller['user_id']
@@ -111,7 +114,6 @@ class usedCarList():
                 # Check if car_id exists
                 cursor.execute("SELECT car_id FROM Used_Car_List WHERE car_id = %s", (car_id,))
                 if cursor.fetchone() is None:
-                    print("Error: car_id does not exist.")
                     return False
                 
                 # Update the Used_Car_List table with the new details
@@ -137,10 +139,8 @@ class usedCarList():
                 
                 # Confirm if rows were affected
                 if cursor.rowcount > 0:
-                    print("Update successful.")
                     return True
                 else:
-                    print("No rows were updated. Check if values are the same as current ones.")
                     return False
             
         except Exception as e:
@@ -150,6 +150,7 @@ class usedCarList():
             connection.close()
 
 
+    #43 As a Used Car Agent, I want to delete used car listings so that I can remove sold used cars or sellers change their minds from the database。
     def deleteUsedCarList(self, car_id):
         connection = self.getDBConnection()
         try:
@@ -170,7 +171,7 @@ class usedCarList():
             connection.close()
 
 
-    # for agent search
+    #44 As a Used Car Agent, I want to search for used car listings so that I can efficiently find a suitable used car that matches the buyer.
     def searchAgentUsedCarList(self, agent_username, field, value):
         connection = self.getDBConnection()
         try:
@@ -230,8 +231,8 @@ class usedCarList():
                     
                     cursor.execute(sql, (agent_id, value))
                     cars_info = cursor.fetchall()
-
                     return cars_info
+                
                 else:
                     print("Error: Agent username not found.")
                     return None
@@ -242,12 +243,12 @@ class usedCarList():
         finally:
             connection.close()
             
-    # for buyer seach available used car
+
+    #70 As a Buyer, I want to search for used cars available for sale so that I can explore different car options using keywords.
     def searchAvailableUsedCarList(self, field, value):
         connection = self.getDBConnection()
         try:
             with connection.cursor() as cursor:               
-
                 sql = ""
                 if field == 'price':
                     sql = """
@@ -307,7 +308,33 @@ class usedCarList():
             connection.close()
 
 
-    # seller search
+#71 As a Buyer, I want to view the used car listings available for sale so that I can access used car information.
+    def getAvailableUsedCarList(self):
+        connection = self.getDBConnection()
+        try:
+            with connection.cursor() as cursor:
+
+                sql = """
+                    SELECT ucl.*, ua.username AS agent_username
+                    FROM Used_Car_List ucl
+                    INNER JOIN User_Account ua 
+                    ON ua.user_id = ucl.agent_id
+                    WHERE car_status = 1
+                    ORDER BY ucl.car_id
+                """
+            
+                cursor.execute(sql)
+                cars_info = cursor.fetchall()
+                return cars_info
+
+        except Exception as e:
+            print(f"Error occurred: {e}")
+            return False
+        finally:
+            connection.close()
+            
+
+    #82 As a Seller, I want to search my used car listings so that I can easily find my used car using keywords
     def searchSellerUsedCarList(self,seller_username, field, value):
         connection = self.getDBConnection()
         try:
@@ -370,7 +397,6 @@ class usedCarList():
                 else:
                     print("Error: Seller Username not found.")
                     return None
-            
 
         except Exception as e:
             print(f"Error occurred: {e}")
@@ -378,54 +404,9 @@ class usedCarList():
         finally:
             connection.close()
 
-    def getAvailableUsedCarList(self):
-        connection = self.getDBConnection()
-        try:
-            with connection.cursor() as cursor:
 
-                sql = """
-                    SELECT ucl.*, ua.username AS agent_username
-                    FROM Used_Car_List ucl
-                    INNER JOIN User_Account ua 
-                    ON ua.user_id = ucl.agent_id
-                    ORDER BY ucl.car_id
-                """
-            
-                cursor.execute(sql)
-                cars_info = cursor.fetchall()
-                return cars_info
 
-        except Exception as e:
-            print(f"Error occurred: {e}")
-            return False
-        finally:
-            connection.close()
-
-    def getAvailableUsedCarList(self):
-        connection = self.getDBConnection()
-        try:
-            with connection.cursor() as cursor:
-
-                # Modify the SQL query to filter by car_status
-                sql = """
-                    SELECT ucl.*, ua.username AS agent_username
-                    FROM Used_Car_List ucl
-                    INNER JOIN User_Account ua 
-                    ON ua.user_id = ucl.agent_id
-                    WHERE ucl.car_status = 1  -- Only fetch cars that are available
-                    ORDER BY ucl.car_id
-                """
-
-                cursor.execute(sql)
-                cars_info = cursor.fetchall()
-                return cars_info
-
-        except Exception as e:
-            print(f"Error occurred: {e}")
-            return False
-        finally:
-            connection.close()
-
+    # for update view +1
     def updateUsedCarView(self, car_id):
         connection = self.getDBConnection()
         try:
@@ -448,8 +429,3 @@ class usedCarList():
         finally:
             connection.close()
 
-    # for buyer seach available used car
-    def getBuyerShortListedCar(self):
-        connection = self.getDBConnection()
-        
-        connection.close

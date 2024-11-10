@@ -139,8 +139,8 @@
             <nav>
                 <ul>
                     <li><a href="{{ url_for('buyer_blueprint.buyer_dashboard') }}" class="{% if current_page == 'dashboard' %}active{% endif %}">Home</a></li>
-                    <li><a href="{{ url_for('buyer_blueprint.buyer_shortlist') }}" class="{% if current_page == 'shortlist' %}active{% endif %}">Shortlist</a></li>
-                    <li><a href="{{ url_for('buyer_blueprint.display_buyer_submit_feedback') }}"  class="{% if current_page == 'feedback' %}active{% endif %}">Feedback</a></li>
+                    <li><a href="{{ url_for('buyer_blueprint.displayViewBuyerShortlist') }}" class="{% if current_page == 'shortlist' %}active{% endif %}">Shortlist</a></li>
+                    <li><a href="{{ url_for('buyer_blueprint.displayBuyerSubmitFeedback') }}"  class="{% if current_page == 'feedback' %}active{% endif %}">Feedback</a></li>
                 </ul>
             </nav>
 

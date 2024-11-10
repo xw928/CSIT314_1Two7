@@ -5,6 +5,11 @@ from controller.admin.createAccountController import createAccountController
 
 user_view_blueprint = Blueprint('user_view_blueprint', __name__)
 
+
+#6 As a User Admin, I want to log into the system so that I can perform administrative tasks and manage the user's account.
+#38 As a Used Car Agent, I want to log into the used car platform so that I can access my account and manage used car listings. 
+#68 As a Buyer, I want to log into the used car platform so that I can access my account and view, search, and save used car listings.
+#79 As a Seller, I want to log into the used car platform so that I can access my account and track my interest in my used car.
 @user_view_blueprint.route("/", methods=['GET', 'POST'])
 def displayLoginPage():
 
@@ -24,13 +29,7 @@ def displayLoginPage():
             return redirect(url_for("user_view_blueprint.displayDashboard"))
         else:
             return render_template("User/userLogin.html", message="Invalid username or password, Please try again.")
-            
 
-
-@user_view_blueprint.route("/logout", methods=["POST"])
-def displayLogout():
-    session.clear()
-    return redirect('/')
 
 
 @user_view_blueprint.route('/dashboard', methods=['GET'])
@@ -48,6 +47,17 @@ def displayDashboard():
             return redirect(url_for("user_view_blueprint.displayLoginPage"))
            
     return redirect(url_for("user_view_blueprint.displayLoginPage"))
+
+
+
+#7 As a User Admin, I want to log out the system so that I can exit the system when I am not using it.
+#39 As a Used Car Agent, I want to log out of my account so that I can exit the platform when I am not using it.
+#69 As a Buyer, I want to log out of my account so that I can exit the platform when I am not using it.
+#80 As a Seller, I want to log out of my account so that I can exit the platform when I am not using it.
+@user_view_blueprint.route("/logout", methods=["POST"])
+def displayLogout():
+    session.clear()
+    return redirect('/')
 
 
 

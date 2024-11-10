@@ -141,7 +141,7 @@
         <p>Shortlisted: {{ car_info.shortlisted }}</p>
         <p>Agent Username: {{ car_info.agent_username }}</p>
         <section class="button-container">
-            <form method="POST" action="{{ url_for('buyer_blueprint.addBuyerShortList') }}">
+            <form method="POST" action="{{ url_for('buyer_blueprint.displayBuyerAddToShortList') }}">
                 <input type="hidden" name="car_id" value="{{ car_info.car_id }}">
                 <button class="shortlist-button" type="submit">Shortlist</button>
             </form>

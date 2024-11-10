@@ -6,13 +6,14 @@ class userProfile():
                config = {
                     'host': 'localhost',
                     'user': 'root',
-                    'password': '1234',
+                    'password': 'Kxw92803',
                     'database': 'used_car_app',
                     'cursorclass': pymysql.cursors.DictCursor
           }
                return pymysql.connect(**config)
         
 
+     #9 As a User Admin, I want to create a user profile so that I can store and manage essential information, such as user type about each user.
      def createUserProfile(self, role, description):
           connection = self.getDBConnection()
           try:
@@ -32,7 +33,7 @@ class userProfile():
           finally:
                connection.close()
 
-
+     #11 As a User Admin, I want to view the user profile so that I can know the user’s personal details.
      def viewUserProfile(self):
           connection = self.getDBConnection()
           try:
@@ -50,7 +51,7 @@ class userProfile():
           finally:
                connection.close()
 
-     
+     #13 As a User Admin, I want to update the user profile so that the latest user profile information is available.
      def updateUserProfile(self, rolename, new_rolename, new_description, new_status):        
           connection = self.getDBConnection()
           try:
@@ -74,6 +75,7 @@ class userProfile():
                connection.close()
 
 
+     #15 As a User Admin, I want to suspend user profiles so that I can remove all associated personal information and user types from the system, even if the user’s account remains active.
      def suspendUserProfile(self, role):
           connection = self.getDBConnection()
           try:
@@ -95,6 +97,7 @@ class userProfile():
                connection.close()
 
 
+     #17 As a User Admin, I want to search for the user profile so that I can find the particular user profile.
      def searchUserProfile(self, role):
           connection = self.getDBConnection()
           try:

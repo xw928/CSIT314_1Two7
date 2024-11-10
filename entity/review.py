@@ -6,13 +6,14 @@ class review():
         config = {
             'host': 'localhost',
             'user': 'root',
-            'password': '1234',
+            'password': 'Kxw92803',
             'database': 'used_car_app',
             'cursorclass': pymysql.cursors.DictCursor
         }
         return pymysql.connect(**config)
 
 
+    #46 As a Used Car Agent, I want to view my reviews so that I can understand my clients' feedback and improve my service accordingly.
     def getReview(self, agent_username):
         connection = self.getDBConnection()
         try:
@@ -40,6 +41,8 @@ class review():
             connection.close()
 
 
+    #77 As a Buyer, I want to view all Used Car Agent reviews so that I can evaluate their service.
+    #85 As a Seller, I want to view all Used Car Agent reviews so that I can evaluate their service.
     def getAllAgentReview(self):
         connection = self.getDBConnection()
         try:
@@ -61,6 +64,8 @@ class review():
             connection.close()
 
 
+    #75 As a Buyer, I want to submit a review of my experience working with a Used Car Agent so that I can share my feedback about their service with others.
+    #86 As a Seller, I want to submit a review of my experience working with a Used Car Agent so that I can share my feedback about their service with others.
     def submitReview(self, agent_username, sender_username, review):
         connection = self.getDBConnection()
         try:
