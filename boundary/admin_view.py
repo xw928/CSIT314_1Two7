@@ -28,6 +28,7 @@ def displayUserProfile():
     return render_template('Admin/UserProfile.html', current_page='user_profile')
 
 
+#8 As a User Admin, I want to create a user account so that I can grant access to the system for new users, allowing them to use the platform.
 @admin_blueprint.route('/create_ua', methods=['GET','POST'])
 def displayCreateUserAccount():
     if request.method == 'POST':
@@ -48,6 +49,26 @@ def displayCreateUserAccount():
     return render_template('Admin/uaCreate.html')
 
 
+#9 As a User Admin, I want to create a user profile so that I can store and manage essential information, such as user type about each user.
+@admin_blueprint.route('/create_up', methods=['GET','POST'])
+def displayCreateUserProfile():
+    if request.method == 'GET':
+        return render_template('Admin/upCreate.html', isAdded=None)
+    
+    role = request.form['role']
+    description = request.form['description']
+    isAdded = createProfileController().createUserProfile(role, description)
+
+    if isAdded:
+        message = "User Profile Created Successfully!"
+        message_type = "success"
+    else:
+        message = "The Role already exists. Please try again..."
+        message_type = "error"
+    return render_template('Admin/upCreate.html', message=message, message_type=message_type)
+
+
+#10 As a User Admin, I want to view the user accounts so that I can know a user’s background.
 @admin_blueprint.route('/view_ua', methods=['GET'])
 def displayViewUserAccount():
     if request.method == 'GET':
@@ -55,6 +76,15 @@ def displayViewUserAccount():
         return render_template('Admin/uaView.html', user_info=user_info)
     
 
+#11 As a User Admin, I want to view the user profile so that I can know the user’s personal details.
+@admin_blueprint.route('/view_up', methods=['GET'])
+def displayViewUserProfile():
+    if request.method == 'GET':
+        profile_info = viewProfileController().viewUserProfile()
+        return render_template('Admin/upView.html', profile_info=profile_info)
+    
+
+#12 As a User Admin, I want to update the user account so that the latest user account information is available.
 @admin_blueprint.route('/update_ua', methods=['GET', 'POST'])
 def displayUpdateUserAccount():
     message = None  
@@ -85,74 +115,7 @@ def displayUpdateUserAccount():
     return render_template('Admin/uaUpdate.html', message=message, message_type=message_type)
 
 
-@admin_blueprint.route('/suspend_ua', methods=['GET', 'POST'])
-def displaySuspendUserAccount():
-    message = None
-
-    if request.method == 'GET':
-        user_info = session.get("user_info")
-        return render_template('Admin/uaSuspend.html', user_info=user_info)
-    
-    elif request.method == "POST":
-        user_info = session.get("user_info")
-        username = user_info['username'] if user_info else None
-        isSuspended = suspendAccountController().suspendUserAccount(username)
-
-        if isSuspended:
-            message = "User Account Suspended Successfully!"
-            user_info['acc_status'] = 0  # Mark as inactive
-            session["user_info"] = user_info 
-    
-    session.pop("user_info", None)
-    return render_template('Admin/uaSuspend.html', message=message, user_info=user_info)
-
-
-@admin_blueprint.route('/search_ua', methods=['GET', 'POST'])
-def displaySearchUserAccount():
-    if request.method == "POST":
-        username = request.form["username"]
-        user_info = searchAccountController().searchUserAccount(username)
-
-        if user_info:
-            session["user_info"] = user_info
-            message = "User Account Found Successfully!"
-            message_type = "success"
-            return render_template('Admin/uaSearch.html', user_info=user_info, message=message, message_type=message_type)
-        else:
-            message = "User Account Not Found..."
-            message_type = "error"
-        return render_template('Admin/uaSearch.html', user_info=[], message=message, message_type=message_type)
-    
-    return render_template('Admin/uaSearch.html')
-
-
-
-@admin_blueprint.route('/create_up', methods=['GET','POST'])
-def displayCreateUserProfile():
-    if request.method == 'GET':
-        return render_template('Admin/upCreate.html', isAdded=None)
-    
-    role = request.form['role']
-    description = request.form['description']
-    isAdded = createProfileController().createUserProfile(role, description)
-
-    if isAdded:
-        message = "User Profile Created Successfully!"
-        message_type = "success"
-    else:
-        message = "The Role already exists. Please try again..."
-        message_type = "error"
-    return render_template('Admin/upCreate.html', message=message, message_type=message_type)
-    
-
-
-@admin_blueprint.route('/view_up', methods=['GET'])
-def displayViewUserProfile():
-    if request.method == 'GET':
-        profile_info = viewProfileController().viewUserProfile()
-        return render_template('Admin/upView.html', profile_info=profile_info)
-    
-
+#13 As a User Admin, I want to update the user profile so that the latest user profile information is available.
 @admin_blueprint.route('/update_up', methods=['GET', 'POST'])
 def displayUpdateUserProfile():
     message = None 
@@ -180,9 +143,32 @@ def displayUpdateUserProfile():
 
     session.pop("profile_info=profile_info", None)
     return render_template('Admin/upUpdate.html', message=message, message_type=message_type)
+
+
+#14 As a User Admin, I want to suspend user accounts so that I can revoke access to the system for users who are no longer available, ensuring they cannot log in or use their accounts anymore.
+@admin_blueprint.route('/suspend_ua', methods=['GET', 'POST'])
+def displaySuspendUserAccount():
+    message = None
+
+    if request.method == 'GET':
+        user_info = session.get("user_info")
+        return render_template('Admin/uaSuspend.html', user_info=user_info)
     
+    elif request.method == "POST":
+        user_info = session.get("user_info")
+        username = user_info['username'] if user_info else None
+        isSuspended = suspendAccountController().suspendUserAccount(username)
+
+        if isSuspended:
+            message = "User Account Suspended Successfully!"
+            user_info['acc_status'] = 0  # Mark as inactive
+            session["user_info"] = user_info 
+    
+    session.pop("user_info", None)
+    return render_template('Admin/uaSuspend.html', message=message, user_info=user_info)
 
 
+#15 As a User Admin, I want to suspend user profiles so that I can remove all associated personal information and user types from the system, even if the user’s account remains active.
 @admin_blueprint.route('/suspend_up', methods=['GET', 'POST'])
 def displaySuspendUserProfile():
     message = None
@@ -204,9 +190,29 @@ def displaySuspendUserProfile():
             
     session.pop("profile_info", None)  
     return render_template('Admin/upSuspend.html', message=message, profile_info=profile_info)
+
+
+#16 As a User Admin, I want to search for the user account so that I can find the particular user account.
+@admin_blueprint.route('/search_ua', methods=['GET', 'POST'])
+def displaySearchUserAccount():
+    if request.method == "POST":
+        username = request.form["username"]
+        user_info = searchAccountController().searchUserAccount(username)
+
+        if user_info:
+            session["user_info"] = user_info
+            message = "User Account Found Successfully!"
+            message_type = "success"
+            return render_template('Admin/uaSearch.html', user_info=user_info, message=message, message_type=message_type)
+        else:
+            message = "User Account Not Found..."
+            message_type = "error"
+        return render_template('Admin/uaSearch.html', user_info=[], message=message, message_type=message_type)
     
+    return render_template('Admin/uaSearch.html')
 
 
+#17 As a User Admin, I want to search for the user profile so that I can find the particular user profile.
 @admin_blueprint.route('/search_up', methods=['GET', 'POST'])
 def displaySearchUserProfile():
     if request.method == "POST":

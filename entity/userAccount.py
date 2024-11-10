@@ -6,13 +6,17 @@ class userAccount():
                config = {
                     'host': 'localhost',
                     'user': 'root',
-                    'password': '1234',
+                    'password': 'Kxw92803',
                     'database': 'used_car_app',
                     'cursorclass': pymysql.cursors.DictCursor
           }
                return pymysql.connect(**config)
 
 
+     #6 As a User Admin, I want to log into the system so that I can perform administrative tasks and manage the user's account.
+     #38 As a Used Car Agent, I want to log into the used car platform so that I can access my account and manage used car listings. 
+     #68 As a Buyer, I want to log into the used car platform so that I can access my account and view, search, and save used car listings.
+     #79 As a Seller, I want to log into the used car platform so that I can access my account and track my interest in my used car.
      def verifyAccount(self, username, password):
           connection = self.getDBConnection()
           try:
@@ -24,10 +28,10 @@ class userAccount():
                     WHERE ua.username=%s AND ua.password=%s AND ua.acc_status = 1 AND up.pf_status = 1;
                     """
                     cursor.execute(sql,(username, password))
-                    result = cursor.fetchone()
+                    user_info = cursor.fetchone()
 
-                    if result:
-                         return result
+                    if user_info:
+                         return user_info
                     else:
                          return None
               
@@ -38,7 +42,7 @@ class userAccount():
                connection.close()
 
         
-
+     #8 As a User Admin, I want to create a user account so that I can grant access to the system for new users, allowing them to use the platform.
      def createUserAccount(self, username, password, profile_id):
           connection = self.getDBConnection()
           try:
@@ -59,7 +63,7 @@ class userAccount():
                connection.close()
 
 
-
+     #10 As a User Admin, I want to view the user accounts so that I can know a user’s background.
      def viewUserAccount(self):
           connection = self.getDBConnection()
           try:
@@ -80,7 +84,8 @@ class userAccount():
           finally:
                connection.close()
 
-     
+
+     #12 As a User Admin, I want to update the user account so that the latest user account information is available.
      def updateUserAccount(self, username, new_username, new_password, new_role, new_status):
           
           connection = self.getDBConnection()
@@ -105,6 +110,7 @@ class userAccount():
                connection.close()
 
 
+     #14 As a User Admin, I want to suspend user accounts so that I can revoke access to the system for users who are no longer available, ensuring they cannot log in or use their accounts anymore.
      def suspendUserAccount(self, username):
           connection = self.getDBConnection()
           try:
@@ -126,6 +132,7 @@ class userAccount():
                connection.close()
 
 
+     #16 As a User Admin, I want to search for the user account so that I can find the particular user account.
      def searchUserAccount(self, username):
           connection = self.getDBConnection()
           try:

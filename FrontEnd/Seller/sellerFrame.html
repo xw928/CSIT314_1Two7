@@ -139,7 +139,7 @@
             <nav>
                 <ul>
                 <li><a href="{{ url_for('seller_blueprint.seller_dashboard') }}" class="{% if current_page == 'dashboard' %}active{% endif %}">Home</a></li>
-                <li><a href="{{ url_for('seller_blueprint.display_seller_submit_feedback') }}?username={{ username }}" class="{% if current_page == 'seller_fb' %}active{% endif %}">Feedback</a></li>
+                <li><a href="{{ url_for('seller_blueprint.displaySellerSubmitFeedback') }}?username={{ username }}" class="{% if current_page == 'seller_fb' %}active{% endif %}">Feedback</a></li>
                 </ul>
             </nav>
 

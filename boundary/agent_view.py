@@ -15,6 +15,7 @@ def agent_dashboard():
     return render_template('Agent/agentDashboard.html', current_page='dashboard')
 
 
+#40 As a Used Car Agent, I want to create a used car listing so that buyers can view the used car's information.
 @agent_blueprint.route('/create_car', methods=['GET','POST'])
 def displayCreateUsedCarList():
     agent_username = session.get('username')
@@ -45,6 +46,7 @@ def displayCreateUsedCarList():
     return render_template('Agent/createList.html')
 
 
+#41 As a Used Car Agent, I want to view used car listings I put up so that I can stay updated on their status.
 @agent_blueprint.route('/view_car', methods=['GET'])
 def displayViewUsedCarList():
     agent_username = session.get('username')
@@ -58,6 +60,7 @@ def displayViewUsedCarList():
             return render_template('Agent/viewList.html', message=message)
     
     
+#42 As a Used Car Agent, I want to update used car listings so that the latest used car information is available.
 @agent_blueprint.route('/update_car', methods=['GET', 'POST'])
 def displayUpdateUsedCarList():
     message = None  
@@ -102,6 +105,7 @@ def displayUpdateUsedCarList():
     return render_template('Agent/updateList.html', message=message, message_type=message_type)
 
 
+#43 As a Used Car Agent, I want to delete used car listings so that I can remove sold used cars or sellers change their minds from the database.
 @agent_blueprint.route('/delete_car', methods=['GET', 'POST'])
 def displayDeleteUsedCarList():
     message = None
@@ -115,7 +119,6 @@ def displayDeleteUsedCarList():
             if cars_info:  
                 car_info = next((car for car in cars_info if car['car_id'] == car_id), None)
             session.pop("cars_info", None)
-            print(car_info)
         return render_template('Agent/deleteList.html', car_info=car_info)
     
     elif request.method == "POST":
@@ -129,6 +132,7 @@ def displayDeleteUsedCarList():
     return render_template('Agent/deleteList.html', message=message, car_info=car_info)
         
 
+#44 As a Used Car Agent, I want to search for used car listings so that I can efficiently find a suitable used car that matches the buyer.
 @agent_blueprint.route('/search_car', methods=['GET', 'POST'])
 def displaySearchUsedCarList():
     agent_username = session.get('username')
@@ -147,6 +151,8 @@ def displaySearchUsedCarList():
     return render_template('Agent/searchList.html')
 
 
+#45 As a Used Car Agent, I want to view my ratings so that I can see how satisfied my clients are and improve my services.
+#46 As a Used Car Agent, I want to view my reviews so that I can understand my clients' feedback and improve my service accordingly.
 @agent_blueprint.route('/agent_feedback', methods=['GET'])
 def displayAgentFeedbackPage():
     agent_username = session.get('username')

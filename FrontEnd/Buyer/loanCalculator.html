@@ -3,13 +3,13 @@
 {% block style %}
 
 .para {
-    margin-top: 8%; 
+    margin-top: 7%; 
     color: black;
     text-align: center;
     font-family: Arial, Helvetica, sans-serif;
     font-weight: bold;
     font-size: 32px;
-    margin-bottom: 2%;
+    margin-bottom: 3%;
 }
 
 .container {
@@ -135,7 +135,7 @@ label {
     font-size: 16px;
     cursor: pointer;
     transition: background-color 0.2s;
-    margin-bottom: 15px;
+    margin-bottom: 30px;
 }
 
 .button:hover {
@@ -160,23 +160,20 @@ label {
             <input type="number" id="price" name="price" step="0.01" required>
         </div>
         <div class="form-group">
-            <label for="interest">Interest Rate:</label>
+            <label for="interest">Annual Interest Rate (%):</label>
             <input type="number" id="interest" name="interest" step="0.01" required>
         </div>
         <div class="form-group">
-            <label for="term of loan">Loan Term:</label>
-            <input type="number" id="term of loan" name="term of loan" required>
+            <label for="term of loan">Loan Term (Years):</label>
+            <input type="number" id="term of loan" name="term of loan" step="0.1" required>
         </div>
-        <div class="form-group">
-            <label for="downpayment">Downpayment Percentage:</label>
-            <input type="number" id="downpayment" name="downpayment" required>
-        </div>
+
         <button class="button" type="submit" value="Calculate"> Calculate </button>
     </form>
 </div>
 
-<div class="box">
-    <h3>Monthly Payment:   <span id="monthlyPayment"></span></h3>
+<div class="box" style="margin-bottom: 60px;">
+    <h3>Monthly Payment:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span id="monthlyPayment" style="color: red; font-size:26px;"></span></h3>
 </div>
 
 </section>
@@ -184,35 +181,33 @@ label {
 <script>
 function calculateLoan() {
     // Get input values
-    const price = parseFloat(document.getElementById("price").value); // Correct ID 'price'
-    const interestRate = parseFloat(document.getElementById("interest").value) / 100; // Correct ID 'interest'
-    const term = parseInt(document.getElementById("term of loan").value); // Correct ID 'term of loan'
-    const downpaymentPercentage = parseInt(document.getElementById("downpayment").value) / 100; // Correct ID 'downpayment'
+    const loan = parseFloat(document.getElementById("price").value); // Car price
+    const interestRate = parseFloat(document.getElementById("interest").value) / 100; // Annual interest rate
+    const term = parseInt(document.getElementById("term of loan").value); // Loan term in years
 
     // Check if all inputs are valid
-    if (isNaN(price) || isNaN(interestRate) || isNaN(term) || isNaN(downpaymentPercentage) || price <= 0 || interestRate <= 0 || term <= 0 || downpaymentPercentage < 0) {
+    if (isNaN(loan) || isNaN(interestRate) || isNaN(term) || loan <= 0 || interestRate <= 0 || term <= 0) {
         alert("Please enter valid values for all fields.");
         return;
     }
 
-    // Calculate the loan amount after downpayment
-    const loanAmount = price - (price * downpaymentPercentage);
-
-    // Convert the annual interest rate to a monthly interest rate
-    const monthlyInterestRate = interestRate / 12;
-
     // Total number of payments (months)
     const numMonths = term * 12;
 
-    // If the interest rate is zero, simply divide the loan by the number of months
+    // Monthly interest rate
+    const monthlyInterestRate = interestRate / 12;
+
+    // Calculate the monthly payment using the fixed-rate loan formula
     let monthlyPayment;
     if (monthlyInterestRate === 0) {
-        monthlyPayment = loanAmount / numMonths;
+        // If the interest rate is 0, simply divide the loan by the number of months
+        monthlyPayment = loan / numMonths;
     } else {
-        // Monthly payment formula (fixed-rate loan)
-        monthlyPayment = (loanAmount * monthlyInterestRate) / (1 - Math.pow(1 + monthlyInterestRate, -numMonths));
+        // Fixed-rate loan formula
+        monthlyPayment = (loan * monthlyInterestRate) / (1 - Math.pow(1 + monthlyInterestRate, -numMonths));
     }
 
+    // Display the monthly payment
     document.getElementById("monthlyPayment").textContent = "$" + monthlyPayment.toFixed(2);
 }
 

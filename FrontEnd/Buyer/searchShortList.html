@@ -178,12 +178,12 @@ input::placeholder {
 
 {% block content %}
 <div class="para">
-    <p style="margin-bottom: 10px;">Search Your ShortList</p>
+    <p style="margin-bottom: 10px;">Search Your Shortlist</p>
 </div>
-<form action="{{ url_for('buyer_blueprint.searchBuyerShortList') }}" method="POST">
+<form action="{{ url_for('buyer_blueprint.displaySearchBuyerShortList') }}" method="POST" >
     <div class="top-container">
-        <section class="left-column">
-            <span for="field">Search By: 
+        <section class="left-column"> 
+            <span for="field">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Search By: &nbsp;&nbsp;
                 <select class="field" style="width: 55%;" id="field" name="field" onchange="updateInputField()">
                     <option value="">Select Field</option>
                     <option value="car_type">Car Type</option>
@@ -195,7 +195,9 @@ input::placeholder {
             </span>
         </section>
         <section class="middle-column">
-            <div id="input-container" name="target"></div>
+            <div id="input-container" name="target">
+
+            </div>
         </section>
         <section class="right-column">
             <button type="submit" class="button">Search</button>
@@ -204,35 +206,28 @@ input::placeholder {
 
     <div class="result-container">
         {% if message %}
-            <p class="message">{{ message }}</p>
+            <p class="message">
+                {{ message }}
+            </p>
         {% endif %}
         {% if cars_info %}
-            {% for car in cars_info %}
-            <div class="box">
-                <p class="price">
-                    {% if car.car_status == 0 %}
-                        <span style="text-decoration: line-through red;">${{ car.price }}</span>
-                        <span style="color: red; margin-left: 10px;">  Sold</span>
-                    {% else %}
-                        ${{ car.price }}
-                    {% endif %}
-                </p>
-                <p class="icon-text" style="margin: 0px;">
-                    <img src="{{ url_for('static', filename='car.png') }}" alt="car">{{ car.brand }} {{ car.model }}
-                </p>
-                <p>Car ID: {{ car.car_id }}</p>
-                <p>Car Type: {{ car.car_type }}</p>
-                <p>Year: {{ car.year }}</p>
-                <p>Fuel Type: {{ car.fuel_type }}</p>
-                <p>Mileage: {{ car.mileage }}</p>
-                <p>Transmission: {{ car.transmission }}</p>
-                <p>Engine Size: {{ car.engine_size }}L</p>
-                <p>Description: {{ car.description }}</p>
-                <p>View: {{ car.view }}</p>
-                <p>Shortlisted: {{ car.shortlisted }}</p>
-                <p>Agent Username: {{ car.agent_username }}</p>
-            </div>
-            {% endfor %}
+        {% for car in cars_info %}
+        <div class="box">
+            <p class="price">${{ car.price }}</p>
+            <p class="icon-text" style="margin: 0px;"><img src="{{ url_for('static', filename='car.png') }}" alt="car">{{ car.brand }} {{ car.model }}</p>
+            <p>Car ID: {{ car.car_id }}</p>
+            <p>Car Type: {{ car.car_type }}</p>
+            <p>Year: {{ car.year }}</p>
+            <p>Fuel Type: {{ car.fuel_type }}</p>
+            <p>Mileage: {{ car.mileage }}</p>
+            <p>Transmission: {{ car.transmission }}</p>
+            <p>Engine Size: {{ car.engine_size }}L</p>
+            <p>Description: {{ car.description }}</p>
+            <p>View: {{ car.view }}</p>
+            <p>Shortlisted: {{ car.shortlisted }}</p>
+            <p>Agent Username: {{ car.agent_username }}</p>
+        </div>
+        {% endfor %}
         {% endif %}
     </div>
 </form>
@@ -270,6 +265,56 @@ input::placeholder {
             input.name = 'target';  
             input.required = true;
             inputContainer.appendChild(input);
+            
+         } else if (fieldSelect.value === 'price') {
+            const select = document.createElement('select');
+            select.id = 'target';
+            select.name = 'target';
+            select.required = true;
+    
+            const defaultOption = document.createElement('option');
+            defaultOption.value = "";
+            defaultOption.textContent = "Select highest price...";
+            select.appendChild(defaultOption);
+    
+            const prices = [
+                {display: "$300,000", value: "300000"},
+                {display: "$280,000", value: "280000"},
+                {display: "$260,000", value: "260000"},
+                {display: "$240,000", value: "240000"},
+                {display: "$220,000", value: "220000"},
+                {display: "$200,000", value: "200000"},
+                {display: "$180,000", value: "180000"},
+                {display: "$160,000", value: "160000"},
+                {display: "$150,000", value: "150000"},
+                {display: "$140,000", value: "140000"},
+                {display: "$130,000", value: "130000"},
+                {display: "$120,000", value: "120000"},
+                {display: "$110,000", value: "110000"},
+                {display: "$100,000", value: "100000"},
+                {display: "$90,000", value: "90000"},
+                {display: "$80,000", value: "80000"},
+                {display: "$70,000", value: "70000"},
+                {display: "$60,000", value: "60000"},
+                {display: "$50,000", value: "50000"},
+                {display: "$45,000", value: "45000"},
+                {display: "$40,000", value: "40000"},
+                {display: "$35,000", value: "35000"},
+                {display: "$30,000", value: "30000"},
+                {display: "$25,000", value: "25000"},
+                {display: "$20,000", value: "20000"},
+                {display: "$15,000", value: "15000"},
+                {display: "$10,000", value: "10000"}
+            ];
+    
+            prices.forEach(price => {
+                const option = document.createElement('option');
+                option.value = price.value; 
+                option.textContent = price.display; 
+                select.appendChild(option);
+            });
+    
+            inputContainer.appendChild(select);
             
         } else if (fieldSelect.value === 'agent_username') {
             const input = document.createElement('input');

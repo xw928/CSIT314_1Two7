@@ -58,11 +58,8 @@
     height: 25px;
 }
 
-.search-button,
-.update-button,
-.delete-button {
-    margin-top:2%;
-    width: 40%;
+.search-button {
+    width: 10%;
     padding: 8px 12px;
     background: rgb(30, 30, 148);
     color: white;
@@ -71,17 +68,10 @@
     font-size: 14px;
     cursor: pointer;
     transition: background-color 0.2s;
-    margin-bottom:8px;
+    margin-bottom:10px;
 }
 
-.update-button {
-    margin-left: 3px;
-    margin-right: 40px;
-}
-
-.search-button,
-.update-button:hover,
-.delete-button:hover {
+.search-button:hover {
     background: #000;
 }
 
@@ -103,7 +93,7 @@
 
 <div class="para">
     <p style="margin-bottom: 10px;">Your ShortListed Cars</p>
-    <button class="back-button" onclick="window.location.href='/search_sl'">Search ShortList</button>
+    <button class="search-button" onclick="window.location.href='/search_sl'">Search ShortList</button>
 </div>
 
 <section class="container">
@@ -114,14 +104,7 @@
     {% endif %}
     {% for car in cars_info %}
     <div class="box">
-        <p class="price">
-            {% if car.car_status == 0 %}
-                <span style="text-decoration: line-through red;">${{ car.price }}</span>
-                <span style="color: red; margin-left: 10px;">  Sold</span>
-            {% else %}
-                ${{ car.price }}
-            {% endif %}
-        </p>
+        <p class="price">${{ car.price }}</p>
         <p class="icon-text" style="margin: 0px;"><img src="{{ url_for('static', filename='car.png') }}" alt="car">{{ car.brand }} {{ car.model }}</p>
         <p>Car ID: {{ car.car_id }}</p>
         <p>Car Type: {{ car.car_type }}</p>
