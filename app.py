@@ -4,7 +4,7 @@ from datetime import timedelta
 app = Flask(__name__, template_folder="FrontEnd")
 
 app.secret_key = "123"
-app.permanent_session_lifetime = timedelta(hours=1)
+app.permanent_session_lifetime = timedelta(days=7)
 
 from boundary.user_view import user_view_blueprint
 app.register_blueprint(user_view_blueprint)
