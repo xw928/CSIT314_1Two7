@@ -315,7 +315,7 @@ class usedCarList():
             with connection.cursor() as cursor:
 
                 sql = """
-                    SELECT ucl.*, ua.username AS agent_username
+                    SELECT ucl.car_id, ucl.car_type, ucl.brand, ucl.model, ucl.price, ucl.view, ucl.shortlisted, ua.username AS agent_username
                     FROM Used_Car_List ucl
                     INNER JOIN User_Account ua 
                     ON ua.user_id = ucl.agent_id
@@ -429,3 +429,26 @@ class usedCarList():
         finally:
             connection.close()
 
+
+    
+    def getSpecificCarDetail(self, car_id):
+        connection = self.getDBConnection()
+        try:
+            with connection.cursor() as cursor:
+                sql = """
+                SELECT ucl.*, ua.username AS agent_username
+                FROM Used_Car_List ucl
+                INNER JOIN User_Account ua 
+                ON ua.user_id = ucl.agent_id
+                WHERE ucl.car_id = %s AND ucl.car_status = 1
+                """
+                cursor.execute(sql, (car_id,))
+                car_info = cursor.fetchone() 
+
+            return car_info 
+
+        except Exception as e:
+            print(f"Error occurred: {e}")
+            return False
+        finally:
+            connection.close()
