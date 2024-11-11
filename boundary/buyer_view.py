@@ -9,7 +9,7 @@ from controller.buyer.updateUsedCarViewController import updateUsedCarViewContro
 from controller.buyer.addToBuyerShortListController import addToBuyerShortListController
 from controller.buyer.viewBuyerShortListedCarController import viewBuyerShortListedCarController
 from controller.buyer.searchBuyerShortListController import searchBuyerShortListController
-
+from controller.buyer.getSpecificCarDetailController import getSpecificCarDetailController
 
 buyer_blueprint = Blueprint('buyer_blueprint', __name__)
 
@@ -55,21 +55,17 @@ def displayViewAvailableUsedCarList():
 def displayBuyerAddToShortList():
     car_id = request.form.get('car_id') 
     buyer_username = session.get('username')  
+    car_info = getSpecificCarDetailController().getSpecificCarDetail(car_id)
     
     is_added = addToBuyerShortListController().addBuyerShortList(buyer_username, car_id)
-    
-    cars_info = session.get('cars_info')
-    car_info = next((car for car in cars_info if car["car_id"] == int(car_id)), None)
 
     if is_added:
-        car_info['shortlisted'] += 1
-        session['cars_info'] = cars_info
+        car_info = getSpecificCarDetailController().getSpecificCarDetail(car_id)
         message = "Car has been successfully shortlisted!"
         message_type = "success"
     else:
         message = "Car has already been shortlisted!"
         message_type = "error"
-    
     return render_template('Buyer/viewCarDetail.html', message=message, message_type=message_type, car_info=car_info)
 
 
@@ -156,7 +152,7 @@ def displayViewAgentFeedback():
                 "rating": rating.get('rating'),
                 "review": review.get('review')
                 })
-
+        print(feedback_info)
         return render_template('Buyer/viewAgentRR.html', feedback_info=feedback_info)
 
 
@@ -170,24 +166,14 @@ def displayBuyerLoanCalculator():
 @buyer_blueprint.route('/buyer_cd', methods=['GET'])
 def getUsedCarDetail():
     car_id = request.args.get('car_id')
+    car_info = []
 
-    if car_id:
-        # Update the view count
-        isAddView = updateUsedCarViewController().updateUsedCarView(car_id)
+    isAddView = updateUsedCarViewController().updateUsedCarView(car_id)
 
-        if isAddView:
-            print(f"View count for car {car_id} updated successfully.")
-
-        cars_info = session.get('cars_info')
-
-        car_info = next((car for car in cars_info if car["car_id"] == int(car_id)), None)
-
-        if car_info:
-            car_info['view'] += 1
-            session['cars_info'] = cars_info 
-
+    if isAddView:
+        car_info = getSpecificCarDetailController().getSpecificCarDetail(car_id)
         return render_template('Buyer/viewCarDetail.html', car_info=car_info)
 
-    return render_template('Buyer/viewCarDetail.html')
+
 
 

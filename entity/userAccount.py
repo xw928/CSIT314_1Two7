@@ -69,7 +69,7 @@ class userAccount():
           try:
                with connection.cursor() as cursor:
                     sql = """
-                    SELECT ua.*, up.*
+                    SELECT ua.user_id, ua.username, up.role, ua.acc_status
                     FROM User_Account ua
                     JOIN User_Profile up ON ua.profile_id = up.profile_id
                     ORDER BY ua.user_id;
