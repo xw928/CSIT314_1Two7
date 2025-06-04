@@ -10,9 +10,6 @@
 ### 🖥️ macOS / Linux
 
 ```bash
-# Navigate to the backend directory
-cd backend
-
 # Create a virtual environment
 python3 -m venv venv
 
@@ -26,8 +23,6 @@ pip install -r requirements.txt
 ### 🖥️ Window
 
 ```bash
-# Navigate to the backend directory (if not already there)
-
 # Create a virtual environment
 python -m venv venv
 
